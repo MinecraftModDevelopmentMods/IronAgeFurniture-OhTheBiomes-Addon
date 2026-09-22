@@ -1,0 +1,21 @@
+{
+    "type": "forge:ore_shaped",
+    "result": {
+        "item": "iafbygaddon:chair_wood_ironage_bench_single_byg_mahogany",
+        "data": 0
+    },
+    "pattern": [
+        "xx",
+        "yy"
+    ],
+    "key": {
+        "x": {
+            "item": "byg:mahogany_planks"
+        },
+        "y": {
+            "item": "minecraft:stick",
+            "data": 0
+        }
+    },
+    "group": "furniture"
+}

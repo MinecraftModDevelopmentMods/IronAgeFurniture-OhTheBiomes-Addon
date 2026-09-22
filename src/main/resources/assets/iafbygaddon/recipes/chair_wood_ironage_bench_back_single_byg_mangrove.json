@@ -1,0 +1,22 @@
+{
+    "type": "forge:ore_shaped",
+    "result": {
+        "item": "iafbygaddon:chair_wood_ironage_bench_back_single_byg_mangrove",
+        "data": 0
+    },
+    "pattern": [
+        "x ",
+        "xx",
+        "yy"
+    ],
+    "key": {
+        "x": {
+            "item": "byg:mangroveplanks"
+        },
+        "y": {
+            "item": "minecraft:stick",
+            "data": 0
+        }
+    },
+    "group": "furniture"
+}

@@ -1,0 +1,18 @@
+{
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:carpet",
+            "data": 12
+        },
+        {
+            "item": "iafbygaddon:chair_wood_ironage_bench_single_byg_great_oak"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:chair_wood_ironage_bench_padded_single_byg_great_oak",
+        "data": 12,
+        "nbt": "{Color:\"brown\"}"
+    },
+    "group": "furniture"
+}

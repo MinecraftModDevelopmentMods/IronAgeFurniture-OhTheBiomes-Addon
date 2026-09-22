@@ -1,0 +1,17 @@
+[
+  {
+    "modid": "${mod_id}",
+    "name": "${mod_name}",
+    "description": "${mod_description}",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/MinecraftModDevelopmentMods/IronAgeFurniture-OhTheBiomes-Addon",
+    "updateUrl": "",
+    "authorList": ["SkyBlade1978", "FoxNekitsune"],
+    "credits": "Minecraft Mod Development community contributors",
+    "logoFile": "assets/iafbygaddon/logo.png",
+    "screenshots": [],
+    "dependencies": [],
+    "requiredMods": ["ironagefurniture", "byg"]
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "iafbygaddon:chair_wood_ironage_stool_tall_byg_fir",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "iafbygaddon:chair_wood_ironage_stool_tall_byg_fir",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "iafbygaddon:chair_wood_ironage_stool_tall_byg_fir"
+    },
+    "facing=west": {
+      "model": "iafbygaddon:chair_wood_ironage_stool_tall_byg_fir",
+      "y": 90
+    }
+  }
+}

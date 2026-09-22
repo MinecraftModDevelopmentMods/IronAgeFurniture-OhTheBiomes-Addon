@@ -1,0 +1,21 @@
+{
+    "type": "forge:ore_shaped",
+    "result": {
+        "item": "iafbygaddon:chair_wood_ironage_stool_short_byg_cherry",
+        "data": 0
+    },
+    "pattern": [
+        " x ",
+        "yyy"
+    ],
+    "key": {
+        "x": {
+            "item": "byg:cherryplanks"
+        },
+        "y": {
+            "item": "minecraft:stick",
+            "data": 0
+        }
+    },
+    "group": "furniture"
+}

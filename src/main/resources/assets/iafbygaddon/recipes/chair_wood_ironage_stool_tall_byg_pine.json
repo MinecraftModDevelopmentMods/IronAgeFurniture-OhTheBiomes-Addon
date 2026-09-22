@@ -1,0 +1,22 @@
+{
+    "type": "forge:ore_shaped",
+    "result": {
+        "item": "iafbygaddon:chair_wood_ironage_stool_tall_byg_pine",
+        "data": 0
+    },
+    "pattern": [
+        " x ",
+        "yyy",
+        "yyy"
+    ],
+    "key": {
+        "x": {
+            "item": "byg:pineplanks"
+        },
+        "y": {
+            "item": "minecraft:stick",
+            "data": 0
+        }
+    },
+    "group": "furniture"
+}

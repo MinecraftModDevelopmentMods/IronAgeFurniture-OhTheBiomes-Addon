@@ -1,0 +1,68 @@
+{
+  "variants": {
+    "facing=north,type=single": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_single_byg_aspen",
+      "y": 0
+    },
+    "facing=east,type=single": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_single_byg_aspen",
+      "y": 90
+    },
+    "facing=south,type=single": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_single_byg_aspen",
+      "y": 180
+    },
+    "facing=west,type=single": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_single_byg_aspen",
+      "y": 270
+    },
+    "facing=north,type=middle": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_middle_byg_aspen",
+      "y": 0
+    },
+    "facing=east,type=middle": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_middle_byg_aspen",
+      "y": 90
+    },
+    "facing=south,type=middle": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_middle_byg_aspen",
+      "y": 180
+    },
+    "facing=west,type=middle": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_middle_byg_aspen",
+      "y": 270
+    },
+    "facing=north,type=right": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_right_byg_aspen",
+      "y": 0
+    },
+    "facing=east,type=right": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_right_byg_aspen",
+      "y": 90
+    },
+    "facing=south,type=right": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_right_byg_aspen",
+      "y": 180
+    },
+    "facing=west,type=right": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_right_byg_aspen",
+      "y": 270
+    },
+    "facing=north,type=left": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_left_byg_aspen",
+      "y": 0
+    },
+    "facing=east,type=left": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_left_byg_aspen",
+      "y": 90
+    },
+    "facing=south,type=left": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_left_byg_aspen",
+      "y": 180
+    },
+    "facing=west,type=left": {
+      "model": "iafbygaddon:chair_wood_ironage_bench_left_byg_aspen",
+      "y": 270
+    }
+  }
+}

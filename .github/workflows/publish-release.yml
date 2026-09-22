@@ -1,0 +1,33 @@
+name: Publish add-on release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: Exact four-part version
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    if: github.repository == 'MinecraftModDevelopmentMods/IronAgeFurniture-OhTheBiomes-Addon'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Fail closed until the CurseForge project is approved
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(sed -n 's/^mod_version=//p' gradle.properties)"
+          project_id="$(sed -n 's/^curseforge_project_id=//p' gradle.properties)"
+          test "${{ inputs.release_version }}" = "$version"
+          if [[ "$project_id" == UNASSIGNED ]]; then
+            echo 'CurseForge publication is disabled until the project receives a numeric ID.' >&2
+            exit 1
+          fi
+          echo 'The project ID is assigned, but publication steps must be added and reviewed before this workflow can release.' >&2
+          exit 1

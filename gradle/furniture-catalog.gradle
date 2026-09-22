@@ -1,0 +1,269 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import java.nio.file.Files
+
+def furnitureCatalogFile = layout.projectDirectory.file('gradle/furniture-catalog.json')
+def furnitureTemplateDirectory = layout.projectDirectory.dir('gradle/furniture-templates')
+def generatedJavaPath = 'src/main/java/zone/moddev/mc/iafbygaddon/init/GeneratedFurnitureCatalog.java'
+def generatedRoots = [
+        'src/main/resources/assets/iafbygaddon/blockstates',
+        'src/main/resources/assets/iafbygaddon/models/block',
+        'src/main/resources/assets/iafbygaddon/models/item',
+        'src/main/resources/assets/iafbygaddon/recipes',
+        'src/main/resources/assets/iafbygaddon/advancements/recipes',
+        'src/main/resources/assets/iafbygaddon/lang'
+]
+def colours = [
+        [name: 'red', title: 'Red', item: 0, carpet: 14],
+        [name: 'orange', title: 'Orange', item: 1, carpet: 1],
+        [name: 'magenta', title: 'Magenta', item: 2, carpet: 2],
+        [name: 'light_blue', title: 'Light Blue', item: 3, carpet: 3],
+        [name: 'yellow', title: 'Yellow', item: 4, carpet: 4],
+        [name: 'lime', title: 'Lime', item: 5, carpet: 5],
+        [name: 'pink', title: 'Pink', item: 6, carpet: 6],
+        [name: 'gray', title: 'Gray', item: 7, carpet: 7],
+        [name: 'light_gray', title: 'Light Gray', item: 8, carpet: 8],
+        [name: 'cyan', title: 'Cyan', item: 9, carpet: 9],
+        [name: 'purple', title: 'Purple', item: 10, carpet: 10],
+        [name: 'blue', title: 'Blue', item: 11, carpet: 11],
+        [name: 'brown', title: 'Brown', item: 12, carpet: 12],
+        [name: 'green', title: 'Green', item: 13, carpet: 13],
+        [name: 'white', title: 'White', item: 14, carpet: 0],
+        [name: 'black', title: 'Black', item: 15, carpet: 15]
+]
+
+def readCatalog = {
+    Map catalog = new JsonSlurper().parse(furnitureCatalogFile.asFile) as Map
+    if (catalog.schema != 1 || catalog.minecraft != '1.12.2'
+            || catalog.loader != 'forge' || catalog.modId != 'iafbygaddon'
+            || catalog.woods.size() != 27) {
+        throw new GradleException('Furniture catalog identity or wood count is invalid')
+    }
+    catalog
+}
+def json = { Object value -> JsonOutput.prettyPrint(JsonOutput.toJson(value)) + '\n' }
+def normalize = { String path -> path.replace('\\', '/') }
+def writeGenerated = { File root, String relative, String content, Set<String> outputs ->
+    String clean = normalize(relative)
+    File destination = new File(root, clean)
+    destination.parentFile.mkdirs()
+    destination.setText(content.replace('\r\n', '\n'), 'UTF-8')
+    outputs.add(clean)
+}
+def furnitureIds = { String wood ->
+    String suffix = "byg_${wood}"
+    [
+            classic   : "chair_wood_ironage_classic_${suffix}",
+            shield    : "chair_wood_ironage_shield_${suffix}",
+            shortStool: "chair_wood_ironage_stool_short_${suffix}",
+            tallStool : "chair_wood_ironage_stool_tall_${suffix}",
+            bench     : "chair_wood_ironage_bench_single_${suffix}",
+            padded    : "chair_wood_ironage_bench_padded_single_${suffix}",
+            logBench  : "chair_wood_ironage_bench_log_single_${suffix}",
+            backBench : "chair_wood_ironage_bench_back_single_${suffix}",
+            paddedBack: "chair_wood_ironage_bench_back_padded_single_${suffix}"
+    ]
+}
+def externalItem = { String path -> [item: "byg:${path}"] as LinkedHashMap }
+def stick = { [item: 'minecraft:stick', data: 0] as LinkedHashMap }
+def output = { String item, Integer count = null, Integer data = null, String nbt = null ->
+    Map value = [item: "iafbygaddon:${item}"] as LinkedHashMap
+    if (data != null) value.data = data
+    if (count != null) value.count = count
+    if (nbt != null) value.nbt = nbt
+    value
+}
+def shaped = { String result, List<String> pattern, Map key, Map criterion, Integer count = null ->
+    [recipe: [type: 'forge:ore_shaped', result: output(result, count, 0), pattern: pattern,
+              key: key, group: 'furniture'] as LinkedHashMap,
+     criterion: criterion]
+}
+def shapeless = { String result, List ingredients, Map criterion,
+                  Integer resultData = null, String nbt = null ->
+    [recipe: [type: 'forge:ore_shapeless', ingredients: ingredients,
+              result: output(result, null, resultData, nbt), group: 'furniture'] as LinkedHashMap,
+     criterion: criterion]
+}
+def advancement = { String id, Map criterion ->
+    [parent: 'minecraft:recipes/root',
+     rewards: [recipes: ["iafbygaddon:${id}"]],
+     criteria: [
+             has_ingredient: [trigger: 'minecraft:inventory_changed',
+                              conditions: [items: [criterion]]],
+             has_the_recipe: [trigger: 'minecraft:recipe_unlocked',
+                              conditions: [recipe: "iafbygaddon:${id}"]]
+     ],
+     requirements: [['has_ingredient', 'has_the_recipe']]] as LinkedHashMap
+}
+
+def renderCatalog = { File root ->
+    Map catalog = readCatalog()
+    Set<String> outputs = new TreeSet<String>()
+    File templates = furnitureTemplateDirectory.asFile
+    Map<String, String> language = new TreeMap<String, String>()
+
+    StringBuilder java = new StringBuilder()
+    java.append('package zone.moddev.mc.iafbygaddon.init;\n\n')
+    java.append('/** Generated, immutable description of the supported BYG wood families. */\n')
+    java.append('public final class GeneratedFurnitureCatalog {\n')
+    java.append('    public static final Wood[] WOODS = new Wood[] {\n')
+    catalog.woods.eachWithIndex { wood, index ->
+        java.append('        new Wood("').append(wood.wood).append('", "')
+                .append(wood.planks).append('", "').append(wood.log).append('")')
+                .append(index + 1 == catalog.woods.size() ? '\n' : ',\n')
+    }
+    java.append('    };\n\n')
+    java.append('    private GeneratedFurnitureCatalog() { throw new IllegalAccessError("This class cannot be instantiated"); }\n\n')
+    java.append('    public static final class Wood {\n')
+    java.append('        public final String id;\n        public final String planks;\n        public final String log;\n')
+    java.append('        private Wood(String id, String planks, String log) {\n')
+    java.append('            this.id = id; this.planks = planks; this.log = log;\n        }\n    }\n}\n')
+    writeGenerated(root, generatedJavaPath, java.toString(), outputs)
+
+    catalog.woods.each { wood ->
+        String suffix = "_byg_${wood.wood}"
+        ['blockstates', 'models/block', 'models/item'].each { category ->
+            File categoryRoot = new File(templates, category)
+            categoryRoot.eachFile { File template ->
+                if (!template.isFile() || !template.name.endsWith('_oak.json')) return
+                String destinationName = template.name.replace('_oak.json', "${suffix}.json")
+                String content = template.getText('UTF-8')
+                        .replace('ironagefurniture:blocks/shield_chair_back', '__IAF_SHIELD_CHAIR_BACK__')
+                        .replace('minecraft:blocks/log_oak_top', '__BYG_LOG_TOP__')
+                        .replace('minecraft:blocks/log_oak', '__BYG_LOG_SIDE__')
+                        .replace('minecraft:blocks/planks_oak', '__BYG_PLANKS__')
+                        .replace('ironagefurniture:', 'iafbygaddon:')
+                        .replace('_oak', suffix)
+                        .replace('__BYG_LOG_TOP__', "byg:blocks/${wood.logTopTexture}")
+                        .replace('__BYG_LOG_SIDE__', "byg:blocks/${wood.logTexture}")
+                        .replace('__BYG_PLANKS__', "byg:blocks/${wood.planksTexture}")
+                        .replace('__IAF_SHIELD_CHAIR_BACK__', 'ironagefurniture:blocks/shield_chair_back')
+                writeGenerated(root, "src/main/resources/assets/iafbygaddon/${category}/${destinationName}",
+                        content, outputs)
+            }
+        }
+
+        Map ids = furnitureIds(wood.wood.toString())
+        Map planks = externalItem(wood.planks.toString())
+        Map log = externalItem(wood.log.toString())
+        Map<String, Map> recipes = new LinkedHashMap<String, Map>()
+        recipes[ids.classic] = shaped(ids.classic, ['x  ', 'xxx', 'y y'],
+                [x: planks, y: stick()], planks)
+        recipes[ids.shield] = shapeless(ids.shield,
+                [[item: 'minecraft:shield'], [item: "iafbygaddon:${ids.classic}"]],
+                [item: 'minecraft:shield'] as LinkedHashMap)
+        recipes[ids.shortStool] = shaped(ids.shortStool, [' x ', 'yyy'],
+                [x: planks, y: stick()], planks)
+        recipes[ids.tallStool] = shaped(ids.tallStool, [' x ', 'yyy', 'yyy'],
+                [x: planks, y: stick()], planks)
+        recipes[ids.bench] = shaped(ids.bench, ['xx', 'yy'],
+                [x: planks, y: stick()], planks)
+        recipes[ids.logBench] = shaped(ids.logBench, ['xxx'], [x: log],
+                log, 3)
+        recipes[ids.backBench] = shaped(ids.backBench, ['x ', 'xx', 'yy'],
+                [x: planks, y: stick()], planks)
+        colours.each { colour ->
+            String paddedRecipe = "${ids.padded}_${colour.carpet}"
+            recipes[paddedRecipe] = shapeless(ids.padded,
+                    [[item: 'minecraft:carpet', data: colour.carpet],
+                     [item: "iafbygaddon:${ids.bench}"]],
+                    [item: 'minecraft:carpet', data: colour.carpet] as LinkedHashMap, colour.item,
+                    "{Color:\"${colour.name}\"}")
+            String paddedBackRecipe = "${ids.paddedBack}_${colour.carpet}"
+            recipes[paddedBackRecipe] = shapeless(ids.paddedBack,
+                    [[item: 'minecraft:carpet', data: colour.carpet],
+                     [item: "iafbygaddon:${ids.backBench}"]],
+                    [item: 'minecraft:carpet', data: colour.carpet] as LinkedHashMap, colour.item,
+                    "{Color:\"${colour.name}\"}")
+        }
+        recipes.each { String id, Map definition ->
+            writeGenerated(root, "src/main/resources/assets/iafbygaddon/recipes/${id}.json",
+                    json(definition.recipe), outputs)
+            writeGenerated(root, "src/main/resources/assets/iafbygaddon/advancements/recipes/${id}.json",
+                    json(advancement(id, definition.criterion as Map)), outputs)
+        }
+
+        String prefix = 'tile.iafbygaddon.'
+        language["${prefix}${ids.classic}.name"] = "${wood.display} Classic Chair"
+        language["${prefix}${ids.shield}.name"] = "${wood.display} Shield Chair"
+        language["${prefix}${ids.shortStool}.name"] = "${wood.display} Short Stool"
+        language["${prefix}${ids.tallStool}.name"] = "${wood.display} Tall Stool"
+        language["${prefix}${ids.bench}.name"] = "${wood.display} Bench"
+        language["${prefix}${ids.logBench}.name"] = "${wood.display} Log Bench"
+        language["${prefix}${ids.backBench}.name"] = "${wood.display} Back Bench"
+        colours.each { colour ->
+            String paddedSuffix = colour.name == 'red' ? '.name' : ".${colour.name}.name"
+            language["${prefix}${ids.padded}${paddedSuffix}"] =
+                    "${wood.display} ${colour.title} Padded Bench"
+            language["${prefix}${ids.paddedBack}${paddedSuffix}"] =
+                    "${wood.display} ${colour.title} Padded Back Bench"
+        }
+    }
+
+    String languageText = language.collect { key, value -> "${key}=${value}" }.join('\n') + '\n'
+    ['en_en.lang', 'en_gb.lang', 'en_us.lang'].each { locale ->
+        writeGenerated(root, "src/main/resources/assets/iafbygaddon/lang/${locale}",
+                languageText, outputs)
+    }
+    outputs
+}
+
+def managedActualPaths = {
+    Set<String> paths = new TreeSet<String>()
+    File javaFile = file(generatedJavaPath)
+    if (javaFile.isFile()) paths.add(generatedJavaPath)
+    generatedRoots.each { relativeRoot ->
+        File directory = file(relativeRoot)
+        if (directory.isDirectory()) {
+            directory.eachFileRecurse { File candidate ->
+                if (candidate.isFile()) {
+                    paths.add(normalize(project.projectDir.toPath().relativize(candidate.toPath()).toString()))
+                }
+            }
+        }
+    }
+    paths
+}
+
+tasks.register('updateFurnitureCatalog') {
+    group = 'generation'
+    description = 'Explicitly regenerates all catalog-owned Java and resources.'
+    inputs.file furnitureCatalogFile
+    inputs.dir furnitureTemplateDirectory
+    outputs.upToDateWhen { false }
+    doLast {
+        file(generatedJavaPath).delete()
+        generatedRoots.each { project.delete(file(it)) }
+        renderCatalog(project.projectDir)
+    }
+}
+
+tasks.register('verifyFurnitureCatalog') {
+    group = 'verification'
+    description = 'Regenerates the catalog into a temporary tree and compares every file.'
+    inputs.file furnitureCatalogFile
+    inputs.dir furnitureTemplateDirectory
+    doLast {
+        File expectedRoot = layout.buildDirectory.dir('verification/furniture-catalog').get().asFile
+        project.delete(expectedRoot)
+        expectedRoot.mkdirs()
+        Set<String> expected = renderCatalog(expectedRoot)
+        Set<String> actual = managedActualPaths()
+        if (actual != expected) {
+            Set<String> missing = new TreeSet<String>(expected); missing.removeAll(actual)
+            Set<String> stale = new TreeSet<String>(actual); stale.removeAll(expected)
+            throw new GradleException("Catalog inventory differs; missing=${missing.take(10)}, stale=${stale.take(10)}")
+        }
+        expected.each { relative ->
+            File expectedFile = new File(expectedRoot, relative)
+            File actualFile = new File(project.projectDir, relative)
+            if (Files.mismatch(expectedFile.toPath(), actualFile.toPath()) != -1L) {
+                throw new GradleException("Catalog output differs; run updateFurnitureCatalog: ${relative}")
+            }
+        }
+    }
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('verifyFurnitureCatalog')
+}

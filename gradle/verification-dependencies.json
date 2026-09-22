@@ -1,0 +1,28 @@
+{
+  "minecraft": "1.12.2",
+  "dependencies": [
+    {
+      "name": "Iron Age Furniture",
+      "version": "0.3.0.112021",
+      "file": "iron-age-furniture-0.3.0.112021.jar",
+      "url": "https://github.com/MinecraftModDevelopmentMods/IronAgeFurniture/releases/download/0.3.0.112021/iron-age-furniture-0.3.0.112021.jar",
+      "sha256": "a2783d56ed2c0f86fccb73972b0216ecdc17c03108ab764fe24bc84a5c2054fd"
+    },
+    {
+      "name": "Oh The Biomes You'll Go",
+      "modId": "byg",
+      "version": "1.7.1",
+      "file": "BiomesYouGo1.7.1.jar",
+      "url": "https://edge.forgecdn.net/files/2833/179/BiomesYouGo1.7.1.jar",
+      "sha256": "0ede6fac09cf7019d214811c32ae1e805b1814776eca983cc9ad3a7cdffbf635"
+    },
+    {
+      "name": "Biomes You'll Go 1.12.2 Community Fix",
+      "modId": "byg",
+      "version": "1.9",
+      "file": "BYG_1.12.2_1.9.jar",
+      "url": "https://edge.forgecdn.net/files/8169/771/BYG_1.12.2_1.9.jar",
+      "sha256": "5782debc8cbd1417e95c1a9726924f73612ed01c57ab289f40b5d7d2c1763494"
+    }
+  ]
+}

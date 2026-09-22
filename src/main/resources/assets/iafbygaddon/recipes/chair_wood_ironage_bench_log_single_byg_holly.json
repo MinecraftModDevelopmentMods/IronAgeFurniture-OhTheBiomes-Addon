@@ -1,0 +1,17 @@
+{
+    "type": "forge:ore_shaped",
+    "result": {
+        "item": "iafbygaddon:chair_wood_ironage_bench_log_single_byg_holly",
+        "data": 0,
+        "count": 3
+    },
+    "pattern": [
+        "xxx"
+    ],
+    "key": {
+        "x": {
+            "item": "byg:hollylog"
+        }
+    },
+    "group": "furniture"
+}

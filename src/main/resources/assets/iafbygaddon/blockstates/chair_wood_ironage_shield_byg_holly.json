@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "iafbygaddon:chair_wood_ironage_shield_byg_holly",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "iafbygaddon:chair_wood_ironage_shield_byg_holly",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "iafbygaddon:chair_wood_ironage_shield_byg_holly"
+    },
+    "facing=west": {
+      "model": "iafbygaddon:chair_wood_ironage_shield_byg_holly",
+      "y": 90
+    }
+  }
+}

@@ -1,0 +1,30 @@
+name: Validate add-on release tag
+
+on:
+  push:
+    tags: ['*.*.*.*']
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  validate:
+    if: github.repository == 'MinecraftModDevelopmentMods/IronAgeFurniture-OhTheBiomes-Addon'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+      - name: Validate tag and prior CI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(sed -n 's/^mod_version=//p' gradle.properties)"
+          test "$GITHUB_REF_NAME" = "$version"
+          test "$(sed -n 's/^curseforge_project_id=//p' gradle.properties)" != UNASSIGNED
+          count="$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/check-runs?per_page=100" --jq '[.check_runs[] | select(.name == "Build, test, and audit" and .conclusion == "success")] | length')"
+          test "$count" -ge 1

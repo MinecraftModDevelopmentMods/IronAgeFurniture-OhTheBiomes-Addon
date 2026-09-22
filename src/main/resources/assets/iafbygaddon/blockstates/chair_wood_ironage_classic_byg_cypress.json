@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "iafbygaddon:chair_wood_ironage_classic_byg_cypress",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "iafbygaddon:chair_wood_ironage_classic_byg_cypress",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "iafbygaddon:chair_wood_ironage_classic_byg_cypress"
+    },
+    "facing=west": {
+      "model": "iafbygaddon:chair_wood_ironage_classic_byg_cypress",
+      "y": 90
+    }
+  }
+}

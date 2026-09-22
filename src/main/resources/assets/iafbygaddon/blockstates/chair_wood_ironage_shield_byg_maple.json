@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "iafbygaddon:chair_wood_ironage_shield_byg_maple",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "iafbygaddon:chair_wood_ironage_shield_byg_maple",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "iafbygaddon:chair_wood_ironage_shield_byg_maple"
+    },
+    "facing=west": {
+      "model": "iafbygaddon:chair_wood_ironage_shield_byg_maple",
+      "y": 90
+    }
+  }
+}

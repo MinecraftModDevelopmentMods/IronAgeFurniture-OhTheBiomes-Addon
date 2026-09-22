@@ -1,0 +1,18 @@
+{
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:carpet",
+            "data": 13
+        },
+        {
+            "item": "iafbygaddon:chair_wood_ironage_bench_single_byg_pine"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:chair_wood_ironage_bench_padded_single_byg_pine",
+        "data": 13,
+        "nbt": "{Color:\"green\"}"
+    },
+    "group": "furniture"
+}
