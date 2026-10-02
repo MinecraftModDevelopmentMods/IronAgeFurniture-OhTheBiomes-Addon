@@ -57,6 +57,19 @@ community-fixed jar instead. Ordinary `runClient` launches never load the probe.
 
 ## Publishing
 
-This candidate stays local for hands-on testing. Publication remains disabled
-while `curseforge_project_id` is `UNASSIGNED`; a project number and a reviewed
-release workflow are required before an upload is possible.
+The approved CurseForge project is `1707176`. Release the exact green MMD
+`master-1.12` commit using **Publish Iron Age Furniture Oh The Biomes Add-On**.
+Enter the version, select the CurseForge release channel and confirm live
+publication. The workflow requires successful build, cold-cache, CodeQL and
+wrapper checks before creating an immutable three-jar bundle.
+
+The `release` environment checks Maven and CurseForge credentials before any
+tag is created. Publication then runs in order: MMD Maven, CurseForge, and
+GitHub Releases. Both Iron Age Furniture and official BYG are required
+CurseForge dependencies. The community-fixed BYG build remains a manual
+substitute, not another required download.
+
+If an upload fails, retry only the failed jobs from the same workflow run.
+Never move a release tag or rebuild replacement jars for an existing version.
+A successful upload may still await CurseForge approval; verify the public
+file page before announcing availability.

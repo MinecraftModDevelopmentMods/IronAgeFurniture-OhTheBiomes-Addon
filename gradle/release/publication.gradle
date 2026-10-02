@@ -1,8 +1,19 @@
 
-// Publication reuses a verified three-jar bundle. An unassigned CurseForge project blocks uploads.
+// Publication reuses the verified three-jar bundle, rather than rebuilding during an upload.
 ext.expectedReleaseFiles = providers.provider {
     String prefix = "${base.archivesName.get()}-${project.version}"
     ["${prefix}.jar", "${prefix}-sources.jar", "${prefix}-javadoc.jar"]
+}
+
+tasks.register('validateMavenReleaseCredentials') {
+    group = 'publishing'
+    doLast {
+        ['MAVEN_UPLOAD_URL', 'MAVEN_UPLOAD_USERNAME', 'MAVEN_UPLOAD_PASSWORD'].each { name ->
+            if (!System.getenv(name)) throw new GradleException("${name} is required")
+        }
+        if (!System.getenv('MAVEN_UPLOAD_URL').startsWith('https://'))
+            throw new GradleException('Maven release publication requires an HTTPS repository')
+    }
 }
 ext.expectedCoordinate = "zone.moddev.mc:iron-age-furniture-oh-the-biomes-addon:${project.version}"
 ext.preparedReleaseDir = providers.gradleProperty('preparedReleaseDir')

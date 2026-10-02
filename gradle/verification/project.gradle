@@ -25,7 +25,7 @@ tasks.register('verifyReleaseConfiguration') {
                 forge_version: '14.23.5.2859', forge_version_range: '[14.23.5.2859,15)',
                 java_version: '8', java_toolchain_version: '8.0.502+7', gradle_java_version: '17',
                 ironagefurniture_version: '0.4.0.112021', byg_version: '1.7.1',
-                curseforge_project_id: 'UNASSIGNED', mod_license: 'LGPL-2.1'
+                curseforge_project_id: '1707176', mod_license: 'LGPL-2.1'
         ]
         expected.each { key, value ->
             if (project.findProperty(key)?.toString() != value) {
@@ -263,8 +263,8 @@ tasks.register('verifyWorkflowPins') {
         workflows.each { file ->
             file.readLines('UTF-8').eachWithIndex { line, index ->
                 def match = line =~ /^\s*uses:\s*([^\s#]+)(?:\s*#.*)?$/
-                if (match.matches() && match.group(1).startsWith('actions/')
-                        && !(match.group(1) ==~ /actions\/[^@]+@[0-9a-f]{40}/)) {
+                if (match.matches() && !match.group(1).startsWith('./')
+                        && !(match.group(1) ==~ /[^@]+@[0-9a-f]{40}/)) {
                     throw new GradleException("Unpinned action at ${file}:${index + 1}: ${line}")
                 }
             }
@@ -275,8 +275,8 @@ tasks.register('verifyWorkflowPins') {
 tasks.register('validateCurseForgeProjectId') {
     group = 'publishing'
     doLast {
-        if (!(project.curseforge_project_id.toString() ==~ /\d+/)) {
-            throw new GradleException('CurseForge publication is disabled until curseforge_project_id is assigned')
+        if (project.curseforge_project_id.toString() != '1707176') {
+            throw new GradleException('CurseForge publication must target the approved Oh The Biomes add-on project 1707176')
         }
     }
 }
@@ -360,10 +360,23 @@ tasks.register('verifyPreparedReleaseArtifacts') {
         List<String> expected = (expectedReleaseFiles.get() + ['SHA256SUMS', 'CHANGELOG.md']).sort()
         List<String> actual = (prepared.listFiles() ?: [] as File[]).findAll { it.isFile() }.collect { it.name }.sort()
         if (actual != expected) throw new GradleException("Prepared bundle differs: ${actual}")
+        List<String> sums = new File(prepared, 'SHA256SUMS').readLines('UTF-8').findAll { it.trim() }
+        Set<String> checked = [] as Set<String>
+        sums.each { line ->
+            def match = line =~ /^([0-9A-Fa-f]{64})  ([A-Za-z0-9._-]+)$/
+            if (!match.matches() || !expectedReleaseFiles.get().contains(match.group(2))
+                    || !checked.add(match.group(2))
+                    || !sha256Of(new File(prepared, match.group(2))).equalsIgnoreCase(match.group(1))) {
+                throw new GradleException('Prepared release checksums do not match the three immutable jars')
+            }
+        }
+        if (checked != expectedReleaseFiles.get().toSet())
+            throw new GradleException('Prepared release checksums must cover all three jars')
     }
 }
 
 tasks.withType(PublishToMavenRepository).configureEach {
     dependsOn tasks.named('validateCurseForgeProjectId')
+    dependsOn tasks.named('validateMavenReleaseCredentials')
     dependsOn preparedReleaseDir.isPresent() ? tasks.named('verifyPreparedReleaseArtifacts') : tasks.named('verifyReleaseArtifacts')
 }
