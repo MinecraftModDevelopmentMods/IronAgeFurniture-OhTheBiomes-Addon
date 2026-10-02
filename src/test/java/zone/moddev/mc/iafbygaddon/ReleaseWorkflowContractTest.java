@@ -23,6 +23,12 @@ public class ReleaseWorkflowContractTest {
         assertTrue(text.contains("ironagefurniture) parent_project_id=341834"));
         assertTrue(text.contains("oh-the-biomes-youll-go) parent_project_id=247560"));
         assertTrue(text.contains("{curseforge:${parent_project_id}}"));
+        assertTrue(text.contains("id: curseforge-upload"));
+        assertTrue(text.contains("steps.curseforge-upload.outputs.curseforge-version"));
+        assertTrue(text.contains("projectID:341834"));
+        assertTrue(text.contains("projectID:247560"));
+        assertFalse(text.contains("projectID:\""));
+        assertTrue(text.contains("CurseForge rejected the required parent relations:"));
         assertFalse(text.contains("(optional)"));
     }
 
