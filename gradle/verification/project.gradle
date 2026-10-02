@@ -228,6 +228,12 @@ tasks.register('verifyRepositoryHygiene') {
     doLast {
         byte[] bytes = providers.exec { commandLine 'git', 'ls-files', '-z' }.standardOutput.asBytes.get()
         List<String> tracked = new String(bytes, StandardCharsets.UTF_8).split('\u0000').findAll { it }
+        file('build.gradle').readLines('UTF-8').each { line ->
+            def module = line =~ /^apply from: '([^']+)'$/
+            if (module.matches() && !tracked.contains(module.group(1))) {
+                throw new GradleException("Build helper must be tracked: ${module.group(1)}")
+            }
+        }
         Set<String> forbiddenDirs = ['.agent', '.agents', '.codex', '.gradle', '.idea', '.settings',
                 'agent-notes', 'bin', 'build', 'logs', 'run', 'run-dependencies/artifacts'] as Set<String>
         List<String> forbidden = tracked.findAll { path ->

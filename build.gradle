@@ -13,13 +13,13 @@ base.archivesName = project.mod_archive_name
 
 // Toolchains and development dependencies come first. The catalog adds only BYG
 // furniture; lighting and shared gameplay stay in the required Iron Age Furniture mod.
-apply from: 'gradle/build/toolchain.gradle'
-apply from: 'gradle/build/development.gradle'
+apply from: 'gradle/development/toolchain.gradle'
+apply from: 'gradle/development/environment.gradle'
 apply from: 'gradle/furniture-catalog.gradle'
 apply from: 'gradle/release/artifacts.gradle'
 apply from: 'gradle/release/publication.gradle'
 apply from: 'gradle/verification/project.gradle'
-apply from: 'gradle/build/eclipse.gradle'
+apply from: 'gradle/development/eclipse.gradle'
 apply from: 'gradle/verification/runtime.gradle'
 
 tasks.named('check') {

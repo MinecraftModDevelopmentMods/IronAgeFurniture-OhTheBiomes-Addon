@@ -1,0 +1,124 @@
+
+import org.gradle.plugins.ide.eclipse.model.SourceFolder
+
+// Development launches use the released IAF API and a separate, checksum-pinned BYG jar.
+ext.eclipseWorkspaceProjectName = 'IronAgeFurniture-OhTheBiomes-Addon'
+eclipse {
+    project {
+        name = eclipseWorkspaceProjectName
+        buildCommand 'org.eclipse.buildship.core.gradleprojectbuilder'
+        natures 'org.eclipse.buildship.core.gradleprojectnature'
+    }
+    classpath {
+        downloadSources = true
+        downloadJavadoc = true
+        defaultOutputDir = file('bin/main')
+        file.whenMerged { classpath ->
+            // Use expanded metadata in Eclipse, rather than copying the raw templates.
+            classpath.entries.removeAll { it.kind == 'src' && it.path == 'src/main/resources' }
+            classpath.entries.findAll { it.kind == 'src' && it.path.startsWith('src/main/') }.each {
+                it.output = 'bin/main'
+            }
+            classpath.entries.findAll { it.kind == 'src' && it.path.startsWith('src/test/') }.each {
+                it.output = 'bin/test'
+            }
+            if (!classpath.entries.any { it.kind == 'src' && it.path == 'build/resources/main' }) {
+                classpath.entries.add(new SourceFolder('build/resources/main', 'bin/main'))
+            }
+            classpath.entries = classpath.entries.unique { "${it.kind}:${it.path}" }
+        }
+    }
+    synchronizationTasks 'isolateEclipseProductionRuns'
+}
+idea.module {
+    downloadSources = true
+    downloadJavadoc = true
+}
+
+ext.developmentModOutput = layout.buildDirectory.dir('development-mod/main')
+ext.runtimeClientProbe = gradle.startParameter.taskNames.any { it.tokenize(':').last() == 'runClientProbe' }
+ext.runDirectory = providers.gradleProperty('runDirectory').getOrElse('run')
+minecraft {
+    mappings channel: project.mcp_mappings_channel, version: project.mcp_mappings_version
+    runs {
+        configureEach {
+            workingDir.convention layout.projectDirectory.dir(runDirectory)
+            systemProperty 'forge.logging.console.level', 'debug'
+            environment 'MC_VERSION', project.minecraft_version
+            environment 'MOD_CLASSES', developmentModOutput.get().asFile.absolutePath
+            mods { iafbygaddon { source sourceSets.main } }
+        }
+        register('client')
+        register('server') { args '--nogui' }
+    }
+}
+
+ext.prepareDevelopmentMod = tasks.register('prepareDevelopmentMod', Sync) {
+    group = 'ide'
+    dependsOn tasks.named('classes')
+    from sourceSets.main.output
+    into developmentModOutput
+}
+tasks.matching { it.name == 'runClient' || it.name == 'runServer' }.configureEach {
+    dependsOn prepareDevelopmentMod
+    doFirst {
+        Set<File> split = sourceSets.main.output.files.collect { it.canonicalFile } as Set<File>
+        File merged = (runtimeClientProbe ? layout.buildDirectory.dir('runtime-test/client-mod') : developmentModOutput).get().asFile
+        setClasspath(project.files(merged, classpath.files.findAll { !split.contains(it.canonicalFile) }))
+        environment 'MOD_CLASSES', merged.absolutePath
+        if (runtimeClientProbe && name == 'runClient') systemProperty 'iafbyg.probe.client', 'true'
+    }
+}
+
+repositories {
+    minecraft.mavenizer(it)
+    maven fg.forgeMaven
+    maven fg.minecraftLibsMaven
+    mavenCentral()
+    ivy {
+        name = 'IronAgeFurnitureGitHubReleases'
+        url = uri('https://github.com/MinecraftModDevelopmentMods/IronAgeFurniture/releases/download')
+        patternLayout { artifact '[revision]/[artifact]-[revision](-[classifier]).[ext]' }
+        metadataSources { artifact() }
+        content { includeModule 'zone.moddev.mc', 'iron-age-furniture' }
+    }
+}
+
+configurations {
+    pinnedCoreArtifact {
+        canBeConsumed = false
+        canBeResolved = true
+        transitive = false
+    }
+}
+ext.forgeMinecraft = minecraft.dependency(
+        "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}")
+renamer.mappings.from minecraft.dependency.toSrgFile
+ext.deobfIronAgeFurniture = renamer.classes('deobfIronAgeFurniture') {
+    input = layout.file(providers.provider { configurations.pinnedCoreArtifact.singleFile })
+    map.from minecraft.dependency.toSrgFile
+    reverse = true
+    output = layout.buildDirectory.file(
+            "dependencies/iron-age-furniture-${project.ironagefurniture_version}-deobf.jar")
+}
+ext.deobfIronAgeFurnitureFile = layout.buildDirectory.file(
+        "dependencies/iron-age-furniture-${project.ironagefurniture_version}-deobf.jar")
+ext.bygRuntimeJar = providers.gradleProperty('bygRuntimeJar')
+        .map { project.file(it) }
+        .getOrElse(file('run-dependencies/artifacts/BiomesYouGo1.7.1.jar'))
+ext.excludeCoreRuntime = providers.gradleProperty('excludeCoreRuntime')
+        .map { it.toBoolean() }
+        .getOrElse(false)
+ext.excludeBygRuntime = providers.gradleProperty('excludeBygRuntime')
+        .map { it.toBoolean() }
+        .getOrElse(false)
+dependencies {
+    implementation forgeMinecraft
+    pinnedCoreArtifact("zone.moddev.mc:iron-age-furniture:${project.ironagefurniture_version}") { transitive = false }
+    compileOnly files(deobfIronAgeFurnitureFile)
+    if (!excludeCoreRuntime) runtimeOnly files(deobfIronAgeFurnitureFile)
+    if (!excludeBygRuntime) runtimeOnly files(bygRuntimeJar)
+    compileOnly 'org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209'
+    testImplementation 'junit:junit:4.13.2'
+}
+tasks.named('compileJava') { dependsOn deobfIronAgeFurniture }
