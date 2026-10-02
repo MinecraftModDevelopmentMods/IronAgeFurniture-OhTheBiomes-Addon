@@ -55,7 +55,7 @@ jobs:
           (cd "$bundle" && sha256sum --check SHA256SUMS)
           expected="$(sha256sum "$bundle/$main_jar" | cut -d' ' -f1)"
           file_group="$((10#$FILE_ID / 1000))"
-          file_tail="$((10#$FILE_ID % 1000))"
+          printf -v file_tail '%03d' "$((10#$FILE_ID % 1000))"
           curl --fail --silent --show-error --location --retry 3 \
             "https://edge.forgecdn.net/files/$file_group/$file_tail/$main_jar" \
             --output "$RUNNER_TEMP/curseforge-main.jar"
