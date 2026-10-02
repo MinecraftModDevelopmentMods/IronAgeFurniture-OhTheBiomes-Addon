@@ -12,6 +12,7 @@
 - Split the build scripts by responsibility and kept runtime probes out of production artifacts and Eclipse launches.
 - Updated the required IAF core to the checksum-pinned 0.4.0.112021 release. BYG 1.7.1 remains the supported baseline.
 - Added the approved CurseForge project and a guarded release pipeline publishing the same verified jars to Maven, CurseForge and GitHub.
+- Corrected the CurseForge parent-project declaration so downloads install both Iron Age Furniture and BYG as required mods.
 
 ## 0.3.0.112021
 

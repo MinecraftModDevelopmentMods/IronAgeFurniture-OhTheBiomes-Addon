@@ -17,9 +17,25 @@ public class ReleaseWorkflowContractTest {
         String text = workflow();
         assertTrue(text.contains("MinecraftModDevelopmentMods/IronAgeFurniture-OhTheBiomes-Addon"));
         assertTrue(text.contains("\"$curseforge_project_id\" != \"1707176\""));
-        assertTrue(text.contains("iron-age-furniture,oh-the-biomes-youll-go"));
+        assertTrue(text.contains("ironagefurniture,oh-the-biomes-youll-go"));
+        assertFalse(text.contains("iron-age-furniture,oh-the-biomes-youll-go"));
         assertTrue(text.contains("${project_slug}(required)"));
+        assertTrue(text.contains("ironagefurniture) parent_project_id=341834"));
+        assertTrue(text.contains("oh-the-biomes-youll-go) parent_project_id=247560"));
+        assertTrue(text.contains("{curseforge:${parent_project_id}}"));
         assertFalse(text.contains("(optional)"));
+    }
+
+    @Test public void dependencyRepairCannotReplaceAnUploadedArtifact() throws Exception {
+        String text = new String(Files.readAllBytes(Paths.get(".github/workflows/update-file-dependencies.yml")),
+                StandardCharsets.UTF_8);
+        assertTrue(text.contains("projects/1707176/update-file"));
+        assertTrue(text.contains("projectID:\"341834\""));
+        assertTrue(text.contains("projectID:\"247560\""));
+        assertTrue(text.contains("sha256sum --check"));
+        assertTrue(text.contains("CurseForge file does not match the immutable GitHub release"));
+        assertFalse(text.contains("/upload-file"));
+        assertFalse(text.contains("create_release_tag"));
     }
 
     @Test public void publicationUsesOneBundleAfterAllChecksAndCredentialConfirmation() throws Exception {
