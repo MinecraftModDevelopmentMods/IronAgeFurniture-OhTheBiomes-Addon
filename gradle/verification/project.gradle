@@ -361,16 +361,17 @@ tasks.register('verifyPreparedReleaseArtifacts') {
         List<String> actual = (prepared.listFiles() ?: [] as File[]).findAll { it.isFile() }.collect { it.name }.sort()
         if (actual != expected) throw new GradleException("Prepared bundle differs: ${actual}")
         List<String> sums = new File(prepared, 'SHA256SUMS').readLines('UTF-8').findAll { it.trim() }
+        Set<String> jarNames = expectedReleaseFiles.get().collect { it.toString() }.toSet()
         Set<String> checked = [] as Set<String>
         sums.each { line ->
             def match = line =~ /^([0-9A-Fa-f]{64})  ([A-Za-z0-9._-]+)$/
-            if (!match.matches() || !expectedReleaseFiles.get().contains(match.group(2))
+            if (!match.matches() || !jarNames.contains(match.group(2))
                     || !checked.add(match.group(2))
                     || !sha256Of(new File(prepared, match.group(2))).equalsIgnoreCase(match.group(1))) {
                 throw new GradleException('Prepared release checksums do not match the three immutable jars')
             }
         }
-        if (checked != expectedReleaseFiles.get().toSet())
+        if (checked != jarNames)
             throw new GradleException('Prepared release checksums must cover all three jars')
     }
 }
