@@ -67,8 +67,8 @@ jobs:
 
           metadata="$(jq -cn --argjson file_id "$FILE_ID" \
             '{fileID:$file_id,relations:{projects:[
-              {slug:"ironagefurniture",projectID:"341834",type:"requiredDependency"},
-              {slug:"oh-the-biomes-youll-go",projectID:"247560",type:"requiredDependency"}
+              {slug:"ironagefurniture",projectID:341834,type:"requiredDependency"},
+              {slug:"oh-the-biomes-youll-go",projectID:247560,type:"requiredDependency"}
             ]}}')"
           if ! curl --fail-with-body --silent --show-error \
             --header "X-Api-Token: $CURSEFORGE_TOKEN" \

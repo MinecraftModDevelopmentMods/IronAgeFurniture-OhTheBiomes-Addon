@@ -670,6 +670,7 @@ jobs:
           fi
 
       - name: Publish Iron Age Furniture Oh The Biomes Add-On
+        id: curseforge-upload
         uses: Kira-NT/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3.1
         with:
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
@@ -689,6 +690,31 @@ jobs:
             ${{ runner.temp }}/release-input/${{ needs.preflight.outputs.main_jar }}
             ${{ runner.temp }}/release-input/${{ needs.preflight.outputs.sources_jar }}
             ${{ runner.temp }}/release-input/${{ needs.preflight.outputs.javadoc_jar }}
+
+      # Set the known project numbers explicitly: slug lookup must not silently omit a parent.
+      - name: Confirm both required parent projects on the uploaded file
+        env:
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          FILE_ID: ${{ steps.curseforge-upload.outputs.curseforge-version }}
+        run: |
+          set -euo pipefail
+          [[ "$FILE_ID" =~ ^[1-9][0-9]{0,9}$ ]]
+          metadata="$(jq -cn --argjson file_id "$FILE_ID" \
+            '{fileID:$file_id,relations:{projects:[
+              {slug:"ironagefurniture",projectID:341834,type:"requiredDependency"},
+              {slug:"oh-the-biomes-youll-go",projectID:247560,type:"requiredDependency"}
+            ]}}')"
+          if ! curl --fail-with-body --silent --show-error \
+            --header "X-Api-Token: $CURSEFORGE_TOKEN" \
+            --form-string "metadata=$metadata" \
+            https://minecraft.curseforge.com/api/projects/1707176/update-file \
+            --output "$RUNNER_TEMP/required-parents-response.json"; then
+            echo "CurseForge rejected the required parent relations:" >&2
+            jq -c . "$RUNNER_TEMP/required-parents-response.json" >&2 || \
+              head -c 2048 "$RUNNER_TEMP/required-parents-response.json" >&2
+            exit 1
+          fi
+          test "$(jq -r '.id' "$RUNNER_TEMP/required-parents-response.json")" = "$FILE_ID"
 
   publish_github:
     name: Publish GitHub Release
