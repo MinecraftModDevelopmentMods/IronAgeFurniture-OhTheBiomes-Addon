@@ -712,9 +712,30 @@ jobs:
             echo "CurseForge rejected the required parent relations:" >&2
             jq -c . "$RUNNER_TEMP/required-parents-response.json" >&2 || \
               head -c 2048 "$RUNNER_TEMP/required-parents-response.json" >&2
+            echo "::warning::The update response failed; checking the saved public relations."
+          else
+            test "$(jq -r '.id' "$RUNNER_TEMP/required-parents-response.json")" = "$FILE_ID"
+          fi
+
+          # Accept a failed response only when the public file data proves the update was saved.
+          parents_verified=false
+          for attempt in 1 2 3 4 5 6; do
+            if curl --fail --silent --show-error \
+              "https://www.curseforge.com/api/v1/mods/1707176/files/$FILE_ID/dependencies" \
+              --output "$RUNNER_TEMP/saved-parents.json" && \
+              jq -e '[.data[] | {id,type,slug}] | sort_by(.id) == [
+                {id:247560,type:"RequiredDependency",slug:"oh-the-biomes-youll-go"},
+                {id:341834,type:"RequiredDependency",slug:"ironagefurniture"}
+              ]' "$RUNNER_TEMP/saved-parents.json" >/dev/null; then
+              parents_verified=true
+              break
+            fi
+            sleep 10
+          done
+          if [[ "$parents_verified" != true ]]; then
+            echo "The public file data does not contain both required parent projects" >&2
             exit 1
           fi
-          test "$(jq -r '.id' "$RUNNER_TEMP/required-parents-response.json")" = "$FILE_ID"
 
   publish_github:
     name: Publish GitHub Release
