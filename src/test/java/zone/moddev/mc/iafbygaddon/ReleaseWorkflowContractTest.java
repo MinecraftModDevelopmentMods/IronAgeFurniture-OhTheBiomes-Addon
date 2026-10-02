@@ -30,8 +30,9 @@ public class ReleaseWorkflowContractTest {
         String text = new String(Files.readAllBytes(Paths.get(".github/workflows/update-file-dependencies.yml")),
                 StandardCharsets.UTF_8);
         assertTrue(text.contains("projects/1707176/update-file"));
-        assertTrue(text.contains("projectID:\"341834\""));
-        assertTrue(text.contains("projectID:\"247560\""));
+        assertTrue(text.contains("projectID:341834"));
+        assertTrue(text.contains("projectID:247560"));
+        assertFalse(text.contains("projectID:\""));
         assertTrue(text.contains("sha256sum --check"));
         assertTrue(text.contains("printf -v file_tail '%03d'"));
         assertTrue(text.contains("CurseForge file does not match the immutable GitHub release"));
