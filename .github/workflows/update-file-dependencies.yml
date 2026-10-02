@@ -70,11 +70,16 @@ jobs:
               {slug:"ironagefurniture",projectID:"341834",type:"requiredDependency"},
               {slug:"oh-the-biomes-youll-go",projectID:"247560",type:"requiredDependency"}
             ]}}')"
-          curl --fail-with-body --silent --show-error \
+          if ! curl --fail-with-body --silent --show-error \
             --header "X-Api-Token: $CURSEFORGE_TOKEN" \
             --form-string "metadata=$metadata" \
             https://minecraft.curseforge.com/api/projects/1707176/update-file \
-            --output "$RUNNER_TEMP/update-response.json"
+            --output "$RUNNER_TEMP/update-response.json"; then
+            echo "CurseForge rejected the dependency update:" >&2
+            jq -c . "$RUNNER_TEMP/update-response.json" >&2 || \
+              head -c 2048 "$RUNNER_TEMP/update-response.json" >&2
+            exit 1
+          fi
           test "$(jq -r '.id' "$RUNNER_TEMP/update-response.json")" = "$FILE_ID"
           {
             echo "Updated required relations on existing CurseForge file $FILE_ID."
