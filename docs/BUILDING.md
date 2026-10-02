@@ -69,6 +69,12 @@ GitHub Releases. Both Iron Age Furniture and official BYG are required
 CurseForge dependencies. The community-fixed BYG build remains a manual
 substitute, not another required download.
 
+The required-parent confirmation is a separate job. If it fails, retry
+**Confirm CurseForge required parents**, not the upload job; this avoids
+uploading the same jars twice. It verifies the saved public dependency list,
+including both project IDs and their required status. This also handles
+CurseForge returning an error after it has already saved a metadata change.
+
 If an upload fails, retry only the failed jobs from the same workflow run.
 Never move a release tag or rebuild replacement jars for an existing version.
 A successful upload may still await CurseForge approval; verify the public
