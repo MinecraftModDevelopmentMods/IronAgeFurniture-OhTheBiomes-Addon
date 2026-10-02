@@ -2,7 +2,6 @@ package zone.moddev.mc.iafbygaddon.test;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.block.Block;
@@ -60,7 +59,8 @@ public final class ClientProbe {
             ++blocks;
         }
         RuntimeProbe.check(blocks == 432, "Missing block registrations: " + blocks);
-        Files.write(Paths.get("iafbyg-client-pass.txt"), ("PASS models=" + models + "\n").getBytes(StandardCharsets.UTF_8));
+        Files.write(client.gameDir.toPath().resolve("iafbyg-client-pass.txt"),
+                ("PASS models=" + models + "\n").getBytes(StandardCharsets.UTF_8));
         LogManager.getLogger().info("IAF BYG CLIENT PROBE PASSED: {} inventory variants, {} block-state families", models, blocks);
         client.shutdown();
     }
