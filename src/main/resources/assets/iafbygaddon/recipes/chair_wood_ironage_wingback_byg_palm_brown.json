@@ -1,0 +1,27 @@
+{
+    "type": "forge:ore_shaped",
+    "group": "iafbygaddon:chair_wood_ironage_wingback_byg_palm/meta_12",
+    "pattern": [
+        "z",
+        "x",
+        "y"
+    ],
+    "key": {
+        "z": {
+            "item": "minecraft:carpet",
+            "data": 12
+        },
+        "x": {
+            "item": "byg:palm_planks"
+        },
+        "y": {
+            "item": "iafbygaddon:chair_wood_ironage_classic_byg_palm",
+            "data": 0
+        }
+    },
+    "result": {
+        "item": "iafbygaddon:chair_wood_ironage_wingback_byg_palm",
+        "data": 12,
+        "nbt": "{Color:\"brown\"}"
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "credit": "By FoxNekitsune",
+    "parent": "ironagefurniture:block/template_chair_wingback_upper",
+    "textures": {
+        "cloth": "minecraft:blocks/wool_colored_red",
+        "log": "byg:blocks/rainbow_eucalyptus_log_side",
+        "particle": "byg:blocks/rainbow_eucalyptus_log_side",
+        "planks": "byg:blocks/rainbow_eucalyptus_planks"
+    }
+}

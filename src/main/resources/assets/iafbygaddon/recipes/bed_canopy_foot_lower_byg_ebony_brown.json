@@ -1,0 +1,19 @@
+{
+    "type": "ironagefurniture:canopy_bed_upgrade",
+    "group": "iafbygaddon:bed_canopy_foot_lower_byg_ebony/meta_12",
+    "ingredients": [
+        {
+            "item": "iafbygaddon:bed_wood_foot_byg_ebony",
+            "data": 12,
+            "nbt": "{Color:\"brown\"}"
+        },
+        {
+            "item": "byg:ebonyplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_canopy_foot_lower_byg_ebony",
+        "data": 12,
+        "nbt": "{Color:\"brown\"}"
+    }
+}

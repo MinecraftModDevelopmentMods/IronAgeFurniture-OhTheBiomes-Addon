@@ -1,0 +1,11 @@
+{
+    "credit": "By FoxNekitsune",
+    "parent": "ironagefurniture:block/template_bed_wood_head_left",
+    "textures": {
+        "cloth": "minecraft:blocks/wool_colored_red",
+        "sheet": "minecraft:blocks/wool_colored_white",
+        "log": "byg:blocks/rowan_log",
+        "particle": "byg:blocks/rowan_log",
+        "planks": "byg:blocks/rowan_planks"
+    }
+}

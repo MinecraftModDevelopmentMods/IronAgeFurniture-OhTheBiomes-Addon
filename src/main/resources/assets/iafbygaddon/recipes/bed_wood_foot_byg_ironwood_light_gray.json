@@ -1,0 +1,18 @@
+{
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:bed",
+            "data": 8
+        },
+        {
+            "item": "byg:ironwoodplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_wood_foot_byg_ironwood",
+        "data": 8,
+        "nbt": "{Color:\"light_gray\"}"
+    },
+    "group": "iafbygaddon:bed_wood_foot_byg_ironwood/meta_8"
+}

@@ -1,0 +1,18 @@
+{
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:bed",
+            "data": 6
+        },
+        {
+            "item": "byg:hollyplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_wood_foot_byg_holly",
+        "data": 6,
+        "nbt": "{Color:\"pink\"}"
+    },
+    "group": "iafbygaddon:bed_wood_foot_byg_holly/meta_6"
+}

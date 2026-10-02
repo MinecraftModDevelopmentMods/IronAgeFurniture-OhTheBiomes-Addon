@@ -1,0 +1,19 @@
+{
+    "type": "ironagefurniture:canopy_bed_upgrade",
+    "group": "iafbygaddon:bed_canopy_foot_lower_byg_green_enchanted/meta_14",
+    "ingredients": [
+        {
+            "item": "iafbygaddon:bed_wood_foot_byg_green_enchanted",
+            "data": 14,
+            "nbt": "{Color:\"white\"}"
+        },
+        {
+            "item": "byg:greenenchantedplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_canopy_foot_lower_byg_green_enchanted",
+        "data": 14,
+        "nbt": "{Color:\"white\"}"
+    }
+}

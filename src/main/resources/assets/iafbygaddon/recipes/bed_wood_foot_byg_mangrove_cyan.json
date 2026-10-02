@@ -1,0 +1,18 @@
+{
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:bed",
+            "data": 9
+        },
+        {
+            "item": "byg:mangroveplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_wood_foot_byg_mangrove",
+        "data": 9,
+        "nbt": "{Color:\"cyan\"}"
+    },
+    "group": "iafbygaddon:bed_wood_foot_byg_mangrove/meta_9"
+}

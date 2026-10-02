@@ -67,9 +67,9 @@ jobs:
             -Dorg.gradle.java.installations.auto-detect=false \
             -Dorg.gradle.java.installations.auto-download=false
           sha256sum \
-            build/libs/iron-age-furniture-oh-the-biomes-addon-0.3.0.112021.jar \
-            build/libs/iron-age-furniture-oh-the-biomes-addon-0.3.0.112021-sources.jar \
-            build/libs/iron-age-furniture-oh-the-biomes-addon-0.3.0.112021-javadoc.jar \
+            build/libs/iron-age-furniture-oh-the-biomes-addon-0.4.0.112021.jar \
+            build/libs/iron-age-furniture-oh-the-biomes-addon-0.4.0.112021-sources.jar \
+            build/libs/iron-age-furniture-oh-the-biomes-addon-0.4.0.112021-javadoc.jar \
             > "$RUNNER_TEMP/artifacts-first.sha256"
           find .gradle/mavenizer \
             -type f \( -name '*.jar' -o -name '*.json' -o -name '*.pom' -o -name '*.module' \) -print0 \
@@ -87,9 +87,9 @@ jobs:
             -Dorg.gradle.java.installations.auto-detect=false \
             -Dorg.gradle.java.installations.auto-download=false
           sha256sum \
-            build/libs/iron-age-furniture-oh-the-biomes-addon-0.3.0.112021.jar \
-            build/libs/iron-age-furniture-oh-the-biomes-addon-0.3.0.112021-sources.jar \
-            build/libs/iron-age-furniture-oh-the-biomes-addon-0.3.0.112021-javadoc.jar \
+            build/libs/iron-age-furniture-oh-the-biomes-addon-0.4.0.112021.jar \
+            build/libs/iron-age-furniture-oh-the-biomes-addon-0.4.0.112021-sources.jar \
+            build/libs/iron-age-furniture-oh-the-biomes-addon-0.4.0.112021-javadoc.jar \
             > "$RUNNER_TEMP/artifacts-second.sha256"
           diff -u "$RUNNER_TEMP/artifacts-first.sha256" "$RUNNER_TEMP/artifacts-second.sha256"
           find .gradle/mavenizer \

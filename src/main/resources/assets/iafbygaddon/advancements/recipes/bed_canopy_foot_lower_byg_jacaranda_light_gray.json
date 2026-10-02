@@ -1,0 +1,33 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "iafbygaddon:bed_canopy_foot_lower_byg_jacaranda_light_gray"
+        ]
+    },
+    "criteria": {
+        "has_ingredient": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "iafbygaddon:bed_wood_foot_byg_jacaranda",
+                        "nbt": "{Color:\"light_gray\"}"
+                    }
+                ]
+            }
+        },
+        "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+                "recipe": "iafbygaddon:bed_canopy_foot_lower_byg_jacaranda_light_gray"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_ingredient",
+            "has_the_recipe"
+        ]
+    ]
+}

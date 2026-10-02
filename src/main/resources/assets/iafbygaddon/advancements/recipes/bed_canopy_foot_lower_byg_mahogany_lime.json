@@ -1,0 +1,33 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "iafbygaddon:bed_canopy_foot_lower_byg_mahogany_lime"
+        ]
+    },
+    "criteria": {
+        "has_ingredient": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "iafbygaddon:bed_wood_foot_byg_mahogany",
+                        "nbt": "{Color:\"lime\"}"
+                    }
+                ]
+            }
+        },
+        "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+                "recipe": "iafbygaddon:bed_canopy_foot_lower_byg_mahogany_lime"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_ingredient",
+            "has_the_recipe"
+        ]
+    ]
+}

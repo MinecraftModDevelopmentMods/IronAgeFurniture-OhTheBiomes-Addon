@@ -1,0 +1,19 @@
+{
+    "type": "ironagefurniture:canopy_bed_upgrade",
+    "group": "iafbygaddon:bed_canopy_foot_lower_byg_maple/meta_11",
+    "ingredients": [
+        {
+            "item": "iafbygaddon:bed_wood_foot_byg_maple",
+            "data": 11,
+            "nbt": "{Color:\"blue\"}"
+        },
+        {
+            "item": "byg:mapleplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_canopy_foot_lower_byg_maple",
+        "data": 11,
+        "nbt": "{Color:\"blue\"}"
+    }
+}

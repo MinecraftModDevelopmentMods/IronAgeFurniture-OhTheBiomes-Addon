@@ -1,38 +1,101 @@
 # Iron Age Furniture Oh The Biomes Add-On
 
-Bring the forests of Oh The Biomes You'll Go into your home with matching Iron Age Furniture chairs, stools and benches.
+Bring the forests of Oh The Biomes You'll Go into your home with matching Iron
+Age Furniture. This Forge 1.12.2 Phase 4 update supports all 27 BYG wood families,
+from Aspen and Baobab to Witch Hazel and Zelkova.
 
-The Forge 1.12.2 release supports all 27 BYG wood families, from Aspen and Baobab to Witch Hazel and Zelkova. Each family includes classic and shield chairs, short and tall stools, plain and log benches, back benches, and padded benches in all 16 Minecraft colours.
+Alongside classic and shield chairs, stools and benches, each wood now has
+wingback chairs, thrones, wooden beds and canopy beds. Padded benches, wingback
+chairs, thrones and beds come in all sixteen Minecraft upholstery colours.
+Lighting and metal sconces are supplied by the required Iron Age Furniture
+core, so the add-on does not duplicate them.
 
 ## Requirements
 
-- Minecraft 1.12.2
+- Minecraft 1.12.2 and Java 8
 - Forge 14.23.5.2859 or newer in the 14.x series
-- Iron Age Furniture 0.3.0.112021 or newer in the 0.3 series
+- Iron Age Furniture 0.4.0.112021 or newer in the 0.4 series
 - Oh The Biomes You'll Go 1.7.1 or newer in the 1.x series
 
-The official BYG 1.7.1 release is the supported baseline. The add-on is also tested with the separately maintained BYG 1.12.2 Fixed 1.9 build, which can be substituted manually if that is the version used by your pack.
+[Official BYG 1.7.1](https://www.curseforge.com/minecraft/mc-mods/oh-the-biomes-youll-go/files/2833179)
+is the supported baseline. The separately maintained
+[BYG 1.12.2 Fixed 1.9](https://www.curseforge.com/minecraft/mc-mods/biomes-youll-go-1-12-2-fixed/files/8169771)
+can be substituted manually if that is the version used by your pack.
 
-BYG 1.7.1 itself logs three missing `parrotegg` recipe errors and may report cascading world-generation warnings. These are upstream BYG 1.7.1 issues rather than missing add-on furniture. The community-fixed 1.9 build removes the recipe errors in our compatibility test.
+Official BYG 1.7.1 contains three broken recipes referring to its removed
+`parrotegg` item, and may report cascading world-generation warnings. Those
+messages come from BYG rather than the add-on. The community-fixed build
+removes the recipe errors.
+
+## Making your furniture
+
+Use the matching BYG planks and logs for each wood family. The furniture appears
+in Iron Age Furniture's Creative tab, and its recipe-book entries keep different
+woods, designs and colours separate.
+
+Craft a vanilla bed with one matching plank to make a wooden bed in the same
+colour. Add another matching plank to turn it into a canopy bed. Two matching
+single beds make a double bed; their wood, style and colour must agree.
+Craft any IAF bed with carpet to change its upholstery deliberately.
+
+A wingback chair uses carpet, matching planks and a classic chair. Use a
+wingback chair instead of the classic chair to make a throne.
+
+Shield chairs keep the actual shield used to craft them, including its pattern,
+damage, enchantments and name. Sneak-right-click with an empty hand to remove
+it, then right-click with a shield to attach one again. An empty frame remains
+usable as a chair.
+
+Wooden furniture is flammable. Beds and tall chairs are one structure: breaking
+a part removes the whole piece rather than leaving detached fragments.
+
+## Upgrading an existing world
+
+Back up your world before upgrading, and update both this add-on and Iron Age
+Furniture together. The existing `iafbygaddon` furniture names have not changed.
+Old benches keep their colours, facing and connected state; old red-only items
+remain red. Old shield chairs start with their original plain shield.
+
+See [Upgrading and compatibility](docs/COMPATIBILITY.md) for the saved-data
+contract and the runtime checks used for this update.
+
+## Resource packs and languages
+
+The models reference BYG's wood textures directly. A resource pack that replaces
+those textures also changes the matching furniture. Upholstery uses vanilla
+coloured wool textures, including resource-pack replacements.
+
+Language files cover the same seventeen locale choices as the 1.12 Phase 4
+core. BYG wood names remain recognisable across languages.
 
 ## Why an add-on?
 
-Installing the BYG furniture only where it is wanted keeps Iron Age Furniture's core download and legacy registry footprint smaller. The add-on requires both parent mods and registers its furniture in the stable `iafbygaddon` namespace.
+Installing BYG furniture only where it is wanted keeps the core download and
+legacy registry footprint smaller. The add-on requires both parent mods and
+owns its furniture in the stable `iafbygaddon` namespace.
 
-Some later Iron Age Furniture versions already include BYG or Oh The Biomes We've Gone support in the main mod. If this add-on is not published for your Minecraft version, check the Iron Age Furniture description for that version's built-in integrations. Future versions of this project will cover Oh The Biomes We've Gone where a compatible release is available and the integration is not already built into Iron Age Furniture.
+Some later Minecraft versions already include BYG or Oh The Biomes We've Gone
+support in Iron Age Furniture itself. If the add-on is not available for your
+Minecraft version, check that version's core integrations first. Future versions
+of this project will cover Oh The Biomes We've Gone where a compatible build
+exists and the core does not already include it.
 
-## Resource packs
+## For pack makers and contributors
 
-The furniture models refer directly to the wood textures supplied by BYG. No BYG artwork is bundled in this add-on, and resource packs which replace BYG's wood textures will also update the matching furniture.
+- Mod ID and registry/resource namespace: `iafbygaddon`
+- Maven coordinate: `zone.moddev.mc:iron-age-furniture-oh-the-biomes-addon:0.4.0.112021`
+- Phase 4: 432 block registrations and 405 item registrations
+- Phase 3: 243 block registrations and 243 item registrations
 
-## For pack makers
+No new tile-entity IDs are introduced: the add-on uses IAF's colour and shield
+data types. The hidden right-hand canopy partner has no item or Creative entry.
+Players who do not install this add-on incur no extra BYG furniture IDs.
 
-- Mod ID: `iafbygaddon`
-- Registry and resource namespace: `iafbygaddon`
-- Maven coordinate: `zone.moddev.mc:iron-age-furniture-oh-the-biomes-addon:0.3.0.112021`
-
-The first 1.12.2 release adds 243 block registrations and 243 item registrations. Existing Iron Age Furniture worlds are unchanged when the add-on is installed.
+See [Building and testing](docs/BUILDING.md) for the Java toolchains, explicit
+catalog-generation command and separate runtime probes.
 
 ## License
 
-Iron Age Furniture Oh The Biomes Add-On is licensed under the GNU Lesser General Public License v2.1. It uses the public Iron Age Furniture API and references textures supplied by BYG; it does not redistribute either mod's assets.
+GNU Lesser General Public License v2.1. The add-on uses the public Iron Age
+Furniture API and references BYG textures; it redistributes neither mod's
+classes or artwork.

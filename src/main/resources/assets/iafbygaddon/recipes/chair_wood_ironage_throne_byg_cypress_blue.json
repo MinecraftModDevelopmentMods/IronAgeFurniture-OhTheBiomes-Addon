@@ -1,0 +1,27 @@
+{
+    "type": "forge:ore_shaped",
+    "group": "iafbygaddon:chair_wood_ironage_throne_byg_cypress/meta_11",
+    "pattern": [
+        "z",
+        "x",
+        "y"
+    ],
+    "key": {
+        "z": {
+            "item": "minecraft:carpet",
+            "data": 11
+        },
+        "x": {
+            "item": "byg:cypressplanks"
+        },
+        "y": {
+            "item": "iafbygaddon:chair_wood_ironage_wingback_byg_cypress",
+            "data": 32767
+        }
+    },
+    "result": {
+        "item": "iafbygaddon:chair_wood_ironage_throne_byg_cypress",
+        "data": 11,
+        "nbt": "{Color:\"blue\"}"
+    }
+}

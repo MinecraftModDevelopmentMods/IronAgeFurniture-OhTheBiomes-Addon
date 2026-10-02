@@ -1,0 +1,19 @@
+{
+    "type": "ironagefurniture:canopy_bed_upgrade",
+    "group": "iafbygaddon:bed_canopy_foot_lower_byg_skyris/meta_11",
+    "ingredients": [
+        {
+            "item": "iafbygaddon:bed_wood_foot_byg_skyris",
+            "data": 11,
+            "nbt": "{Color:\"blue\"}"
+        },
+        {
+            "item": "byg:skyrisplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_canopy_foot_lower_byg_skyris",
+        "data": 11,
+        "nbt": "{Color:\"blue\"}"
+    }
+}
