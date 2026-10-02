@@ -25,6 +25,9 @@ public class ReleaseWorkflowContractTest {
         assertTrue(text.contains("{curseforge:${parent_project_id}}"));
         assertTrue(text.contains("id: curseforge-upload"));
         assertTrue(text.contains("steps.curseforge-upload.outputs.curseforge-version"));
+        assertTrue(text.contains("needs.publish_curseforge.outputs.file_id"));
+        assertTrue(text.contains("  verify_curseforge_dependencies:"));
+        assertTrue(text.contains("      - verify_curseforge_dependencies"));
         assertTrue(text.contains("projectID:341834"));
         assertTrue(text.contains("projectID:247560"));
         assertFalse(text.contains("projectID:\""));
