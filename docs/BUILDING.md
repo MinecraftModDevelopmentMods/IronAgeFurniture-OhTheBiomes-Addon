@@ -73,3 +73,10 @@ If an upload fails, retry only the failed jobs from the same workflow run.
 Never move a release tag or rebuild replacement jars for an existing version.
 A successful upload may still await CurseForge approval; verify the public
 file page before announcing availability.
+
+For a dependency-list correction on an existing CurseForge file, use
+**Update CurseForge file dependencies** with its version and main file ID.
+It checks the downloaded file against the published GitHub checksum, then
+updates only the two required parent relations. It does not upload a jar,
+change a release tag or create another release. IAF's CurseForge slug is
+`ironagefurniture`; its project ID is `341834`.

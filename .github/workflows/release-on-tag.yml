@@ -27,7 +27,7 @@ jobs:
           test "$GITHUB_REF_NAME" = "$version"
           test "$(sed -n 's/^curseforge_project_id=//p' gradle.properties)" = 1707176
           test "$(sed -n 's/^mod_id=//p' gradle.properties)" = iafbygaddon
-          test "$(sed -n 's/^curseforge_required=//p' gradle.properties)" = iron-age-furniture,oh-the-biomes-youll-go
+          test "$(sed -n 's/^curseforge_required=//p' gradle.properties)" = ironagefurniture,oh-the-biomes-youll-go
           checks="$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/check-runs?per_page=100")"
           for name in 'Build, test, and audit' 'Cold bootstrap and reproducibility' 'Analyze Java' 'validation'; do
             conclusion="$(jq -r --arg name "$name" '[.check_runs[] | select(.name == $name)] | sort_by(.id) | last | .conclusion // "missing"' <<<"$checks")"

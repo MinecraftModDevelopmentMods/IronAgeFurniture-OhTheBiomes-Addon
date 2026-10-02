@@ -25,7 +25,8 @@ tasks.register('verifyReleaseConfiguration') {
                 forge_version: '14.23.5.2859', forge_version_range: '[14.23.5.2859,15)',
                 java_version: '8', java_toolchain_version: '8.0.502+7', gradle_java_version: '17',
                 ironagefurniture_version: '0.4.0.112021', byg_version: '1.7.1',
-                curseforge_project_id: '1707176', mod_license: 'LGPL-2.1'
+                curseforge_project_id: '1707176', mod_license: 'LGPL-2.1',
+                curseforge_required: 'ironagefurniture,oh-the-biomes-youll-go'
         ]
         expected.each { key, value ->
             if (project.findProperty(key)?.toString() != value) {

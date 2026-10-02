@@ -1,0 +1,83 @@
+name: Update CurseForge file dependencies
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: Existing published add-on version
+        required: true
+        type: string
+      file_id:
+        description: Existing CurseForge main file ID in project 1707176
+        required: true
+        type: string
+      confirm_update:
+        description: Confirm updating the required parent relations without replacing the jar
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: iaf-byg-file-metadata-${{ inputs.file_id }}
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: Update existing file relations only
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: release
+    steps:
+      # Check the uploaded bytes against the public release before changing its dependency list.
+      - name: Verify the existing file and update its required parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          RELEASE_VERSION: ${{ inputs.release_version }}
+          FILE_ID: ${{ inputs.file_id }}
+          CONFIRM_UPDATE: ${{ inputs.confirm_update }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = MinecraftModDevelopmentMods/IronAgeFurniture-OhTheBiomes-Addon
+          test "$CONFIRM_UPDATE" = true
+          test -n "$CURSEFORGE_TOKEN"
+          [[ "$RELEASE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.112021$ ]]
+          [[ "$FILE_ID" =~ ^[1-9][0-9]{0,9}$ ]]
+
+          main_jar="iron-age-furniture-oh-the-biomes-addon-$RELEASE_VERSION.jar"
+          bundle="$RUNNER_TEMP/published-release"
+          mkdir -p "$bundle"
+          gh release download "$RELEASE_VERSION" --repo "$GITHUB_REPOSITORY" \
+            --pattern '*.jar' --pattern SHA256SUMS --dir "$bundle"
+          (cd "$bundle" && sha256sum --check SHA256SUMS)
+          expected="$(sha256sum "$bundle/$main_jar" | cut -d' ' -f1)"
+          file_group="$((10#$FILE_ID / 1000))"
+          printf -v file_tail '%03d' "$((10#$FILE_ID % 1000))"
+          curl --fail --silent --show-error --location --retry 3 \
+            "https://edge.forgecdn.net/files/$file_group/$file_tail/$main_jar" \
+            --output "$RUNNER_TEMP/curseforge-main.jar"
+          actual="$(sha256sum "$RUNNER_TEMP/curseforge-main.jar" | cut -d' ' -f1)"
+          if [[ "$actual" != "$expected" ]]; then
+            echo "CurseForge file does not match the immutable GitHub release" >&2
+            exit 1
+          fi
+
+          metadata="$(jq -cn --argjson file_id "$FILE_ID" \
+            '{fileID:$file_id,relations:{projects:[
+              {slug:"ironagefurniture",projectID:"341834",type:"requiredDependency"},
+              {slug:"oh-the-biomes-youll-go",projectID:"247560",type:"requiredDependency"}
+            ]}}')"
+          curl --fail-with-body --silent --show-error \
+            --header "X-Api-Token: $CURSEFORGE_TOKEN" \
+            --form-string "metadata=$metadata" \
+            https://minecraft.curseforge.com/api/projects/1707176/update-file \
+            --output "$RUNNER_TEMP/update-response.json"
+          test "$(jq -r '.id' "$RUNNER_TEMP/update-response.json")" = "$FILE_ID"
+          {
+            echo "Updated required relations on existing CurseForge file $FILE_ID."
+            echo "The jar, release tag and published checksum remain unchanged."
+            echo "Main SHA-256: $expected"
+          } >> "$GITHUB_STEP_SUMMARY"

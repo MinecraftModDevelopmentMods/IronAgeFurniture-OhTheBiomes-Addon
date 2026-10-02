@@ -234,7 +234,7 @@ jobs:
             exit 1
           fi
 
-          if [[ "$(value mod_id)" != iafbygaddon || "$curseforge_required" != "iron-age-furniture,oh-the-biomes-youll-go" ]]; then
+          if [[ "$(value mod_id)" != iafbygaddon || "$curseforge_required" != "ironagefurniture,oh-the-biomes-youll-go" ]]; then
             echo "The add-on identity and both required parent projects must match the release contract" >&2
             exit 1
           fi
@@ -246,7 +246,13 @@ jobs:
                 echo "Invalid CurseForge required project slug $project_slug" >&2
                 exit 1
               fi
-              curseforge_dependencies+="${curseforge_dependencies:+$'\n'}${project_slug}(required)"
+              # Use the approved project IDs as well as their public slugs.
+              case "$project_slug" in
+                ironagefurniture) parent_project_id=341834 ;;
+                oh-the-biomes-youll-go) parent_project_id=247560 ;;
+                *) echo "Unknown required parent project $project_slug" >&2; exit 1 ;;
+              esac
+              curseforge_dependencies+="${curseforge_dependencies:+$'\n'}${project_slug}(required){curseforge:${parent_project_id}}"
             done
           fi
 
