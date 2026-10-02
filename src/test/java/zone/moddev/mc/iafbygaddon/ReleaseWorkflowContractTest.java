@@ -35,6 +35,7 @@ public class ReleaseWorkflowContractTest {
         assertTrue(text.contains("sha256sum --check"));
         assertTrue(text.contains("printf -v file_tail '%03d'"));
         assertTrue(text.contains("CurseForge file does not match the immutable GitHub release"));
+        assertTrue(text.contains("CurseForge rejected the dependency update:"));
         assertFalse(text.contains("/upload-file"));
         assertFalse(text.contains("create_release_tag"));
     }
