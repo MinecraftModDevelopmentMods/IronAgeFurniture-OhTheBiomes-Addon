@@ -1,0 +1,17 @@
+{
+    "type": "ironagefurniture:matching_upholstery",
+    "group": "iafbygaddon:bed_wood_foot_left_byg_zelkova/matching_upholstery",
+    "ingredients": [
+        {
+            "item": "iafbygaddon:bed_wood_foot_byg_zelkova",
+            "data": 32767
+        },
+        {
+            "item": "iafbygaddon:bed_wood_foot_byg_zelkova",
+            "data": 32767
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_wood_foot_left_byg_zelkova"
+    }
+}

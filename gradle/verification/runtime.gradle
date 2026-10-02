@@ -1,0 +1,42 @@
+// The small probe mod is built separately and is never part of the player-facing jar.
+tasks.register('compileRuntimeProbe', JavaCompile) {
+    dependsOn tasks.named('classes')
+    source fileTree('src/runtimeTest/java')
+    classpath = files(sourceSets.main.output, sourceSets.main.compileClasspath)
+    destinationDirectory = layout.buildDirectory.dir('runtime-test/classes')
+    javaCompiler = java8Compiler
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    options.encoding = 'UTF-8'
+    options.compilerArgs.add('-proc:none')
+}
+def probeDeobf = tasks.register('runtimeProbeDeobfJar', Jar) {
+    dependsOn tasks.named('compileRuntimeProbe')
+    archiveFileName = 'iafbyg-runtime-probe-deobf.jar'
+    destinationDirectory = layout.buildDirectory.dir('runtime-test')
+    from layout.buildDirectory.dir('runtime-test/classes')
+    from 'src/runtimeTest/resources'
+}
+def probeJar = renamer.classes(probeDeobf) {
+    map.from minecraft.dependency.toSrgFile
+    output = layout.buildDirectory.file('runtime-test/iafbyg-runtime-probe.jar')
+}
+tasks.register('runtimeProbeJar') {
+    group = 'verification'
+    dependsOn probeJar
+}
+def clientProbeOutput = layout.buildDirectory.dir('runtime-test/client-mod')
+tasks.register('prepareClientProbe', Sync) {
+    dependsOn tasks.named('classes'), tasks.named('compileRuntimeProbe')
+    from sourceSets.main.output
+    from layout.buildDirectory.dir('runtime-test/classes')
+    into clientProbeOutput
+}
+if (runtimeClientProbe) {
+    tasks.matching { it.name == 'runClient' }.configureEach { dependsOn tasks.named('prepareClientProbe') }
+}
+tasks.register('runClientProbe') {
+    group = 'verification'
+    description = 'Bake every Creative inventory model in a disposable client.'
+    dependsOn 'runClient'
+}

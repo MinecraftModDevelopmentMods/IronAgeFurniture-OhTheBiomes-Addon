@@ -1,0 +1,18 @@
+{
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:bed",
+            "data": 15
+        },
+        {
+            "item": "byg:witchhazelplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_wood_foot_byg_witch_hazel",
+        "data": 15,
+        "nbt": "{Color:\"black\"}"
+    },
+    "group": "iafbygaddon:bed_wood_foot_byg_witch_hazel/meta_15"
+}

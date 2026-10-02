@@ -1,0 +1,49 @@
+{
+    "variants": {
+        "facing=north,part=lower": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_throne_byg_green_enchanted",
+            "y": 180
+        },
+        "facing=north,part=middle": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_throne_byg_green_enchanted_middle",
+            "y": 180
+        },
+        "facing=north,part=upper": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_throne_byg_green_enchanted_upper",
+            "y": 180
+        },
+        "facing=east,part=lower": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_throne_byg_green_enchanted",
+            "y": 270
+        },
+        "facing=east,part=middle": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_throne_byg_green_enchanted_middle",
+            "y": 270
+        },
+        "facing=east,part=upper": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_throne_byg_green_enchanted_upper",
+            "y": 270
+        },
+        "facing=south,part=lower": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_throne_byg_green_enchanted"
+        },
+        "facing=south,part=middle": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_throne_byg_green_enchanted_middle"
+        },
+        "facing=south,part=upper": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_throne_byg_green_enchanted_upper"
+        },
+        "facing=west,part=lower": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_throne_byg_green_enchanted",
+            "y": 90
+        },
+        "facing=west,part=middle": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_throne_byg_green_enchanted_middle",
+            "y": 90
+        },
+        "facing=west,part=upper": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_throne_byg_green_enchanted_upper",
+            "y": 90
+        }
+    }
+}

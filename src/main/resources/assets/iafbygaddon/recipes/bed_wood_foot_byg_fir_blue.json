@@ -1,0 +1,18 @@
+{
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:bed",
+            "data": 11
+        },
+        {
+            "item": "byg:firplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_wood_foot_byg_fir",
+        "data": 11,
+        "nbt": "{Color:\"blue\"}"
+    },
+    "group": "iafbygaddon:bed_wood_foot_byg_fir/meta_11"
+}

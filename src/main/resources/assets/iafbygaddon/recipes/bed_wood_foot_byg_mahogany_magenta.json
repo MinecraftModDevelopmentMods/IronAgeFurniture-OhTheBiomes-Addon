@@ -1,0 +1,18 @@
+{
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:bed",
+            "data": 2
+        },
+        {
+            "item": "byg:mahogany_planks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_wood_foot_byg_mahogany",
+        "data": 2,
+        "nbt": "{Color:\"magenta\"}"
+    },
+    "group": "iafbygaddon:bed_wood_foot_byg_mahogany/meta_2"
+}

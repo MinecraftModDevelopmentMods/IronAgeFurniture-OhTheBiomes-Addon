@@ -1,0 +1,122 @@
+import groovy.xml.XmlSlurper
+import java.util.Arrays
+
+// Eclipse launches use one production output folder; tests and runtime probes never join that classpath.
+tasks.register('syncForge12EclipseLaunches') {
+    group = 'ide'
+    dependsOn tasks.named('genEclipseRuns')
+    dependsOn tasks.named('classes')
+    doLast {
+        File prefs = file('.settings/org.eclipse.buildship.core.prefs')
+        prefs.parentFile.mkdirs()
+        def escape = { String value -> value.replace('\\', '\\\\').replace(':', '\\:') }
+        String javaHome = System.getenv('JAVA_HOME') ?: System.getProperty('java.home')
+        prefs.setText([
+                'arguments=', 'auto.sync=false', 'build.scans.enabled=false',
+                'connection.gradle.distribution=GRADLE_DISTRIBUTION(WRAPPER)',
+                "connection.gradle.user.home=${escape(gradle.gradleUserHomeDir.absolutePath)}",
+                'connection.project.dir=', 'eclipse.preferences.version=1',
+                "gradle.user.home=${escape(gradle.gradleUserHomeDir.absolutePath)}",
+                "java.home=${escape(javaHome)}", 'jvm.arguments=', 'offline.mode=false',
+                'override.workspace.settings=true', 'show.console.view=false', 'show.executions.view=false', ''
+        ].join('\r\n'), 'UTF-8')
+        File mainOutput = file('bin/main')
+        copy { from layout.buildDirectory.dir('classes/java/main'); into mainOutput }
+        copy { from layout.buildDirectory.dir('resources/main'); into mainOutput }
+        ['runClient.launch', 'runServer.launch'].each { name ->
+            File launch = [file(name), file(".eclipse/${name}")].find { it.isFile() }
+            if (launch == null) throw new GradleException("ForgeGradle did not generate ${name}")
+            String text = launch.getText('UTF-8')
+            def args = text =~ /(<stringAttribute key="org\.eclipse\.jdt\.launching\.PROGRAM_ARGUMENTS" value=")([^"]*)("\/>)/
+            if (args.count != 1) throw new GradleException("Malformed arguments in ${name}")
+            String value = args[0][2]
+            ['cache', 'metadata', 'to-srg', 'to-obf'].each { flag ->
+                String prefix = "--${flag} "
+                int start = value.indexOf(prefix)
+                if (start < 0) throw new GradleException("Missing --${flag} in ${name}")
+                start += prefix.length()
+                int end = value.indexOf(' --', start)
+                if (end < 0) throw new GradleException("Unterminated --${flag} in ${name}")
+                String path = value.substring(start, end)
+                if (!path.startsWith('&quot;')) value = value.substring(0, start) + '&quot;' + path + '&quot;' + value.substring(end)
+            }
+            text = text.replace(args[0][0], args[0][1] + value + args[0][3])
+            text = text.replaceFirst(/<stringAttribute key="org\.eclipse\.jdt\.launching\.PROJECT_ATTR" value="[^"]*"\/>/,
+                    java.util.regex.Matcher.quoteReplacement("<stringAttribute key=\"org.eclipse.jdt.launching.PROJECT_ATTR\" value=\"${eclipseWorkspaceProjectName}\"/>"))
+            text = text.replaceAll(/projectName=&quot;[^&]*&quot;/,
+                    java.util.regex.Matcher.quoteReplacement("projectName=&quot;${eclipseWorkspaceProjectName}&quot;"))
+            text = text.replaceAll(/javaProject=&quot;[^&]*&quot;/,
+                    java.util.regex.Matcher.quoteReplacement("javaProject=&quot;${eclipseWorkspaceProjectName}&quot;"))
+            if (text.contains('key="MOD_CLASSES"')) {
+                text = text.replaceAll(/<mapEntry key="MOD_CLASSES" value="[^"]*"\/>/,
+                        java.util.regex.Matcher.quoteReplacement("<mapEntry key=\"MOD_CLASSES\" value=\"${mainOutput.absolutePath}\"/>"))
+            }
+            if (!text.contains('ATTR_EXCLUDE_TEST_CODE')) {
+                text = text.replace('</launchConfiguration>',
+                        '  <booleanAttribute key="org.eclipse.jdt.launching.ATTR_EXCLUDE_TEST_CODE" value="true"/>\r\n</launchConfiguration>')
+            }
+            launch.setText(text, 'UTF-8')
+        }
+    }
+}
+tasks.register('isolateEclipseProductionRuns') {
+    group = 'ide'
+    dependsOn tasks.named('syncForge12EclipseLaunches')
+}
+tasks.register('verifyEclipseProductionClasspath') {
+    group = 'verification'
+    dependsOn tasks.named('eclipse')
+    dependsOn tasks.named('syncForge12EclipseLaunches')
+    doLast {
+        if (!file('.project').getText('UTF-8').contains("<name>${eclipseWorkspaceProjectName}</name>")) {
+            throw new GradleException('Eclipse project name is wrong')
+        }
+        def xml = new XmlSlurper(false, false).parse(file('.classpath'))
+        xml.classpathentry.each { entry ->
+            String path = entry.@path.text().replace('\\', '/')
+            if (path.startsWith('src/test/') && entry.@output.text() != 'bin/test') {
+                throw new GradleException("Test source is not isolated: ${path}")
+            }
+            if (entry.@kind.text() == 'src' && (path.startsWith('src/main/') || path == 'build/resources/main')
+                    && entry.@output.text() != 'bin/main') {
+                throw new GradleException("Production output is not merged: ${path}")
+            }
+        }
+        def identities = xml.classpathentry.collect { "${it.@kind.text()}:${it.@path.text()}" }
+        if (identities.size() != identities.toSet().size()) throw new GradleException('Duplicate Eclipse classpath entries')
+        if (!xml.classpathentry.any { it.@path.text() == 'build/resources/main' }) {
+            throw new GradleException('Eclipse must use processed resources')
+        }
+        ['Client', 'Server'].each { run ->
+            File launch = [file("run${run}.launch"), file(".eclipse/run${run}.launch")].find { it.isFile() }
+            String text = launch.getText('UTF-8')
+            if (!text.contains('ATTR_EXCLUDE_TEST_CODE') || !text.contains(file('bin/main').absolutePath)
+                    || !text.contains("key=\"org.eclipse.jdt.launching.PROJECT_ATTR\" value=\"${eclipseWorkspaceProjectName}\"")
+                    || !text.contains("projectName=&quot;${eclipseWorkspaceProjectName}&quot;")
+                    || !text.contains("javaProject=&quot;${eclipseWorkspaceProjectName}&quot;")) {
+                throw new GradleException("Eclipse launch is not production-only: ${launch}")
+            }
+            ['cache', 'metadata', 'to-srg', 'to-obf'].each { flag ->
+                if (!text.contains("--${flag} &quot;")) throw new GradleException("Unquoted --${flag} in ${launch}")
+            }
+        }
+        if (!Arrays.equals(file('bin/main/mcmod.info').bytes,
+                layout.buildDirectory.file('resources/main/mcmod.info').get().asFile.bytes)) {
+            throw new GradleException('Eclipse metadata is stale')
+        }
+        fileTree(layout.buildDirectory.dir('classes/java/main')).matching { include '**/*.class' }.each { source ->
+            String relative = layout.buildDirectory.dir('classes/java/main').get().asFile.toPath().relativize(source.toPath()).toString()
+            File compiled = new File(file('bin/main'), relative)
+            if (!compiled.isFile() || !Arrays.equals(source.bytes, compiled.bytes)) {
+                throw new GradleException("Eclipse class is stale: ${relative}")
+            }
+        }
+    }
+}
+tasks.matching { it.name == 'genEclipseRuns' }.configureEach { finalizedBy tasks.named('syncForge12EclipseLaunches') }
+tasks.matching { it.name == 'eclipse' }.configureEach { finalizedBy tasks.named('syncForge12EclipseLaunches') }
+tasks.register('prepareEclipse') {
+    group = 'ide'
+    dependsOn tasks.named('eclipse')
+    dependsOn tasks.named('isolateEclipseProductionRuns')
+}

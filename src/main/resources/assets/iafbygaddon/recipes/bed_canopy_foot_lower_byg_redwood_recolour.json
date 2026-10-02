@@ -1,0 +1,17 @@
+{
+    "type": "ironagefurniture:bed_recolour",
+    "group": "iafbygaddon:bed_canopy_foot_lower_byg_redwood/bed_recolour",
+    "ingredients": [
+        {
+            "item": "iafbygaddon:bed_canopy_foot_lower_byg_redwood",
+            "data": 32767
+        },
+        {
+            "item": "minecraft:carpet",
+            "data": 32767
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_canopy_foot_lower_byg_redwood"
+    }
+}

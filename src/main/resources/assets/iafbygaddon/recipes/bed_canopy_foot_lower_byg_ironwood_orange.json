@@ -1,0 +1,19 @@
+{
+    "type": "ironagefurniture:canopy_bed_upgrade",
+    "group": "iafbygaddon:bed_canopy_foot_lower_byg_ironwood/meta_1",
+    "ingredients": [
+        {
+            "item": "iafbygaddon:bed_wood_foot_byg_ironwood",
+            "data": 1,
+            "nbt": "{Color:\"orange\"}"
+        },
+        {
+            "item": "byg:ironwoodplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_canopy_foot_lower_byg_ironwood",
+        "data": 1,
+        "nbt": "{Color:\"orange\"}"
+    }
+}

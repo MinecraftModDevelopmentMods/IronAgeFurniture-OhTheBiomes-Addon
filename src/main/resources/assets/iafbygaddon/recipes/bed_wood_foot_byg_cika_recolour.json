@@ -1,0 +1,17 @@
+{
+    "type": "ironagefurniture:bed_recolour",
+    "group": "iafbygaddon:bed_wood_foot_byg_cika/bed_recolour",
+    "ingredients": [
+        {
+            "item": "iafbygaddon:bed_wood_foot_byg_cika",
+            "data": 32767
+        },
+        {
+            "item": "minecraft:carpet",
+            "data": 32767
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_wood_foot_byg_cika"
+    }
+}

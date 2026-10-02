@@ -1,0 +1,18 @@
+{
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:bed",
+            "data": 10
+        },
+        {
+            "item": "byg:willowplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_wood_foot_byg_willow",
+        "data": 10,
+        "nbt": "{Color:\"purple\"}"
+    },
+    "group": "iafbygaddon:bed_wood_foot_byg_willow/meta_10"
+}

@@ -1,0 +1,10 @@
+{
+    "credit": "By FoxNekitsune",
+    "parent": "ironagefurniture:block/template_chair_throne_inventory",
+    "textures": {
+        "cloth": "minecraft:blocks/wool_colored_red",
+        "log": "byg:blocks/great_oak_log_side",
+        "particle": "byg:blocks/great_oak_log_side",
+        "planks": "byg:blocks/great_oak_planks"
+    }
+}

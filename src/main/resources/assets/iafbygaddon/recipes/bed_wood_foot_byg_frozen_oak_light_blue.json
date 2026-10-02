@@ -1,0 +1,18 @@
+{
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:bed",
+            "data": 3
+        },
+        {
+            "item": "byg:frozenoakplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_wood_foot_byg_frozen_oak",
+        "data": 3,
+        "nbt": "{Color:\"light_blue\"}"
+    },
+    "group": "iafbygaddon:bed_wood_foot_byg_frozen_oak/meta_3"
+}

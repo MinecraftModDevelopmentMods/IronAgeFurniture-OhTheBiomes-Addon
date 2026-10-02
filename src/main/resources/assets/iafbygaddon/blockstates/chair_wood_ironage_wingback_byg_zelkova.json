@@ -1,0 +1,49 @@
+{
+    "variants": {
+        "facing=north,part=lower": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_wingback_byg_zelkova",
+            "y": 180
+        },
+        "facing=north,part=middle": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_wingback_byg_zelkova_upper",
+            "y": 180
+        },
+        "facing=north,part=upper": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_wingback_byg_zelkova_upper",
+            "y": 180
+        },
+        "facing=east,part=lower": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_wingback_byg_zelkova",
+            "y": 270
+        },
+        "facing=east,part=middle": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_wingback_byg_zelkova_upper",
+            "y": 270
+        },
+        "facing=east,part=upper": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_wingback_byg_zelkova_upper",
+            "y": 270
+        },
+        "facing=south,part=lower": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_wingback_byg_zelkova"
+        },
+        "facing=south,part=middle": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_wingback_byg_zelkova_upper"
+        },
+        "facing=south,part=upper": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_wingback_byg_zelkova_upper"
+        },
+        "facing=west,part=lower": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_wingback_byg_zelkova",
+            "y": 90
+        },
+        "facing=west,part=middle": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_wingback_byg_zelkova_upper",
+            "y": 90
+        },
+        "facing=west,part=upper": {
+            "model": "iafbygaddon:upholstered/chair_wood_ironage_wingback_byg_zelkova_upper",
+            "y": 90
+        }
+    }
+}

@@ -1,0 +1,64 @@
+
+// Publication reuses the verified three-jar bundle, rather than rebuilding during an upload.
+ext.expectedReleaseFiles = providers.provider {
+    String prefix = "${base.archivesName.get()}-${project.version}"
+    ["${prefix}.jar", "${prefix}-sources.jar", "${prefix}-javadoc.jar"]
+}
+
+tasks.register('validateMavenReleaseCredentials') {
+    group = 'publishing'
+    doLast {
+        ['MAVEN_UPLOAD_URL', 'MAVEN_UPLOAD_USERNAME', 'MAVEN_UPLOAD_PASSWORD'].each { name ->
+            if (!System.getenv(name)) throw new GradleException("${name} is required")
+        }
+        if (!System.getenv('MAVEN_UPLOAD_URL').startsWith('https://'))
+            throw new GradleException('Maven release publication requires an HTTPS repository')
+    }
+}
+ext.expectedCoordinate = "zone.moddev.mc:iron-age-furniture-oh-the-biomes-addon:${project.version}"
+ext.preparedReleaseDir = providers.gradleProperty('preparedReleaseDir')
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = project.group.toString()
+            artifactId = base.archivesName.get()
+            version = project.version.toString()
+            if (preparedReleaseDir.isPresent()) {
+                File prepared = file(preparedReleaseDir.get())
+                artifact(new File(prepared, expectedReleaseFiles.get()[0]))
+                artifact(new File(prepared, expectedReleaseFiles.get()[1])) { classifier = 'sources' }
+                artifact(new File(prepared, expectedReleaseFiles.get()[2])) { classifier = 'javadoc' }
+            } else {
+                artifact releaseJar
+                artifact tasks.named('sourcesJar')
+                artifact tasks.named('javadocJar')
+            }
+            pom {
+                name = project.mod_name
+                description = project.mod_description
+                url = 'https://github.com/MinecraftModDevelopmentMods/IronAgeFurniture-OhTheBiomes-Addon'
+                licenses {
+                    license {
+                        name = 'GNU Lesser General Public License, Version 2.1'
+                        url = 'https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/MinecraftModDevelopmentMods/IronAgeFurniture-OhTheBiomes-Addon.git'
+                    developerConnection = 'scm:git:ssh://git@github.com/MinecraftModDevelopmentMods/IronAgeFurniture-OhTheBiomes-Addon.git'
+                    url = 'https://github.com/MinecraftModDevelopmentMods/IronAgeFurniture-OhTheBiomes-Addon'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = 'release'
+            url = uri(providers.environmentVariable('MAVEN_UPLOAD_URL').orElse('https://invalid.invalid/unconfigured').get())
+            credentials {
+                username = providers.environmentVariable('MAVEN_UPLOAD_USERNAME').orNull ?: ''
+                password = providers.environmentVariable('MAVEN_UPLOAD_PASSWORD').orNull ?: ''
+            }
+        }
+    }
+}

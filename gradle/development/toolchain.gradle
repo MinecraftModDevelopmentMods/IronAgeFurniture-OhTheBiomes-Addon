@@ -1,0 +1,89 @@
+import java.security.MessageDigest
+import org.apache.tools.ant.filters.FixCrLfFilter
+import org.gradle.jvm.toolchain.JvmVendorSpec
+
+// Gradle and Minecraft use different JVMs: Java 17 runs the build, while Java 8 compiles the mod.
+ext.versionParts = project.mod_version.toString().tokenize('.')
+if (versionParts.size() != 4 || !versionParts.every { it ==~ /\d+/ }) {
+    throw new GradleException("mod_version must use Major.Minor.Bug.Target numeric form: ${project.mod_version}")
+}
+ext.mcParts = project.minecraft_version.toString().tokenize('.')
+ext.expectedTarget = "${mcParts[0]}${mcParts[1].padLeft(2, '0')}${mcParts[2].padLeft(2, '0')}${project.loader_code}"
+if (versionParts[3] != expectedTarget) {
+    throw new GradleException("Version target ${versionParts[3]} does not match ${expectedTarget}")
+}
+if (GradleVersion.current() != GradleVersion.version('9.6.1')) {
+    throw new GradleException("This build requires Gradle 9.6.1, found ${GradleVersion.current()}")
+}
+if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
+    throw new GradleException("Gradle requires Java 17 or newer, found ${System.getProperty('java.version')}")
+}
+
+ext.sha256Of = { File inputFile ->
+    MessageDigest digest = MessageDigest.getInstance('SHA-256')
+    inputFile.withInputStream { input ->
+        byte[] buffer = new byte[8192]
+        for (int read = input.read(buffer); read >= 0; read = input.read(buffer)) {
+            if (read > 0) digest.update(buffer, 0, read)
+        }
+    }
+    digest.digest().encodeHex().toString().toUpperCase(Locale.ROOT)
+}
+
+ext.java8Compiler = javaToolchains.compilerFor {
+    languageVersion = JavaLanguageVersion.of(8)
+    vendor = JvmVendorSpec.ADOPTIUM
+}
+ext.java8Launcher = javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(8)
+    vendor = JvmVendorSpec.ADOPTIUM
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+        vendor = JvmVendorSpec.ADOPTIUM
+    }
+    withSourcesJar()
+    withJavadocJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    javaCompiler = java8Compiler
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    options.encoding = 'UTF-8'
+    options.compilerArgs.addAll(['-Xlint:deprecation', '-Xmaxerrs', '1000'])
+}
+tasks.withType(Javadoc).configureEach {
+    failOnError = false
+    options.encoding = 'UTF-8'
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addBooleanOption('notimestamp', true)
+}
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+ext.archiveTextSuffixes = ['.info', '.java', '.json', '.lang', '.mcmeta', '.md', '.properties', '.txt', '.xml']
+ext.archiveTextPatterns = archiveTextSuffixes.collect { "**/*${it}".toString() }
+archiveTextPatterns.addAll(['**/element-list', '**/package-list'])
+ext.normalizeArchiveLineEndings = { details ->
+    details.filter(FixCrLfFilter,
+            eol: FixCrLfFilter.CrLf.newInstance('lf'),
+            eof: FixCrLfFilter.AddAsisRemove.newInstance('asis'))
+}
+
+tasks.register('verifyBuildEnvironment') {
+    group = 'verification'
+    doLast {
+        def metadata = java8Compiler.get().metadata
+        String vendor = metadata.vendor.toString().toLowerCase(Locale.ROOT)
+        if (metadata.languageVersion.asInt() != 8
+                || !(vendor.contains('eclipse temurin') || vendor.contains('eclipse adoptium'))) {
+            throw new GradleException("Compiler must be Eclipse Temurin Java 8; found ${metadata.vendor} ${metadata.javaRuntimeVersion}")
+        }
+    }
+}
+tasks.withType(JavaCompile).configureEach { dependsOn tasks.named('verifyBuildEnvironment') }

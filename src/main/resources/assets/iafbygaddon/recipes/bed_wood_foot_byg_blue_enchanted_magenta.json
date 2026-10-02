@@ -1,0 +1,18 @@
+{
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:bed",
+            "data": 2
+        },
+        {
+            "item": "byg:enchantedplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_wood_foot_byg_blue_enchanted",
+        "data": 2,
+        "nbt": "{Color:\"magenta\"}"
+    },
+    "group": "iafbygaddon:bed_wood_foot_byg_blue_enchanted/meta_2"
+}

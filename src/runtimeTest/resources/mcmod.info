@@ -1,0 +1,9 @@
+[
+  {
+    "modid": "iafbygruntimeprobe",
+    "name": "Iron Age Furniture BYG Runtime Tests",
+    "description": "Disposable-world verification; not part of the add-on distribution.",
+    "version": "1",
+    "mcversion": "1.12.2"
+  }
+]

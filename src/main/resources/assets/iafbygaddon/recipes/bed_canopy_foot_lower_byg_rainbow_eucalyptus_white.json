@@ -1,0 +1,19 @@
+{
+    "type": "ironagefurniture:canopy_bed_upgrade",
+    "group": "iafbygaddon:bed_canopy_foot_lower_byg_rainbow_eucalyptus/meta_14",
+    "ingredients": [
+        {
+            "item": "iafbygaddon:bed_wood_foot_byg_rainbow_eucalyptus",
+            "data": 14,
+            "nbt": "{Color:\"white\"}"
+        },
+        {
+            "item": "byg:rainboweucalyptusplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_canopy_foot_lower_byg_rainbow_eucalyptus",
+        "data": 14,
+        "nbt": "{Color:\"white\"}"
+    }
+}

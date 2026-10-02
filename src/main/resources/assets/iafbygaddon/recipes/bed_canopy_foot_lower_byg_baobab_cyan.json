@@ -1,0 +1,19 @@
+{
+    "type": "ironagefurniture:canopy_bed_upgrade",
+    "group": "iafbygaddon:bed_canopy_foot_lower_byg_baobab/meta_9",
+    "ingredients": [
+        {
+            "item": "iafbygaddon:bed_wood_foot_byg_baobab",
+            "data": 9,
+            "nbt": "{Color:\"cyan\"}"
+        },
+        {
+            "item": "byg:baobabplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_canopy_foot_lower_byg_baobab",
+        "data": 9,
+        "nbt": "{Color:\"cyan\"}"
+    }
+}
