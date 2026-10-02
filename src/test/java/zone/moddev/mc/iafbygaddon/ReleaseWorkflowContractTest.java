@@ -25,10 +25,16 @@ public class ReleaseWorkflowContractTest {
         assertTrue(text.contains("{curseforge:${parent_project_id}}"));
         assertTrue(text.contains("id: curseforge-upload"));
         assertTrue(text.contains("steps.curseforge-upload.outputs.curseforge-version"));
+        assertTrue(text.contains("needs.publish_curseforge.outputs.file_id"));
+        assertTrue(text.contains("  verify_curseforge_dependencies:"));
+        assertTrue(text.contains("      - verify_curseforge_dependencies"));
         assertTrue(text.contains("projectID:341834"));
         assertTrue(text.contains("projectID:247560"));
         assertFalse(text.contains("projectID:\""));
         assertTrue(text.contains("CurseForge rejected the required parent relations:"));
+        assertTrue(text.contains("files/$FILE_ID/dependencies"));
+        assertTrue(text.contains("sort_by(.id) == ["));
+        assertTrue(text.contains("The public file data does not contain both required parent projects"));
         assertFalse(text.contains("(optional)"));
     }
 
@@ -43,6 +49,9 @@ public class ReleaseWorkflowContractTest {
         assertTrue(text.contains("printf -v file_tail '%03d'"));
         assertTrue(text.contains("CurseForge file does not match the immutable GitHub release"));
         assertTrue(text.contains("CurseForge rejected the dependency update:"));
+        assertTrue(text.contains("files/$FILE_ID/dependencies"));
+        assertTrue(text.contains("sort_by(.id) == ["));
+        assertTrue(text.contains("The public file data does not contain both required parent projects"));
         assertFalse(text.contains("/upload-file"));
         assertFalse(text.contains("create_release_tag"));
     }
