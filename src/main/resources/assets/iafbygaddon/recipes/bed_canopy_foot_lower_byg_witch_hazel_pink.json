@@ -1,0 +1,19 @@
+{
+    "type": "ironagefurniture:canopy_bed_upgrade",
+    "group": "iafbygaddon:bed_canopy_foot_lower_byg_witch_hazel/meta_6",
+    "ingredients": [
+        {
+            "item": "iafbygaddon:bed_wood_foot_byg_witch_hazel",
+            "data": 6,
+            "nbt": "{Color:\"pink\"}"
+        },
+        {
+            "item": "byg:witchhazelplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_canopy_foot_lower_byg_witch_hazel",
+        "data": 6,
+        "nbt": "{Color:\"pink\"}"
+    }
+}

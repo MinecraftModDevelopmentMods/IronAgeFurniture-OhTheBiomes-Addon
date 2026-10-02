@@ -1,0 +1,18 @@
+{
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:bed",
+            "data": 9
+        },
+        {
+            "item": "byg:palm_planks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_wood_foot_byg_palm",
+        "data": 9,
+        "nbt": "{Color:\"cyan\"}"
+    },
+    "group": "iafbygaddon:bed_wood_foot_byg_palm/meta_9"
+}

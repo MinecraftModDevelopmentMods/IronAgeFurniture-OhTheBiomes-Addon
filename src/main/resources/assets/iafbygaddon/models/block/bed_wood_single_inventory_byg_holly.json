@@ -1,0 +1,11 @@
+{
+    "credit": "By FoxNekitsune",
+    "parent": "ironagefurniture:block/template_bed_wood_single_inventory",
+    "textures": {
+        "cloth": "minecraft:blocks/wool_colored_red",
+        "sheet": "minecraft:blocks/wool_colored_white",
+        "log": "byg:blocks/holly_log_side",
+        "particle": "byg:blocks/holly_log_side",
+        "planks": "byg:blocks/holly_planks"
+    }
+}

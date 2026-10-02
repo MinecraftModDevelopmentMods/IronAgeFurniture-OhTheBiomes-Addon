@@ -1,0 +1,19 @@
+{
+    "type": "ironagefurniture:canopy_bed_upgrade",
+    "group": "iafbygaddon:bed_canopy_foot_lower_byg_cypress/meta_2",
+    "ingredients": [
+        {
+            "item": "iafbygaddon:bed_wood_foot_byg_cypress",
+            "data": 2,
+            "nbt": "{Color:\"magenta\"}"
+        },
+        {
+            "item": "byg:cypressplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_canopy_foot_lower_byg_cypress",
+        "data": 2,
+        "nbt": "{Color:\"magenta\"}"
+    }
+}

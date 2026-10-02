@@ -25,6 +25,11 @@ jobs:
           set -euo pipefail
           version="$(sed -n 's/^mod_version=//p' gradle.properties)"
           test "$GITHUB_REF_NAME" = "$version"
-          test "$(sed -n 's/^curseforge_project_id=//p' gradle.properties)" != UNASSIGNED
-          count="$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/check-runs?per_page=100" --jq '[.check_runs[] | select(.name == "Build, test, and audit" and .conclusion == "success")] | length')"
-          test "$count" -ge 1
+          test "$(sed -n 's/^curseforge_project_id=//p' gradle.properties)" = 1707176
+          test "$(sed -n 's/^mod_id=//p' gradle.properties)" = iafbygaddon
+          test "$(sed -n 's/^curseforge_required=//p' gradle.properties)" = iron-age-furniture,oh-the-biomes-youll-go
+          checks="$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/check-runs?per_page=100")"
+          for name in 'Build, test, and audit' 'Cold bootstrap and reproducibility' 'Analyze Java' 'validation'; do
+            conclusion="$(jq -r --arg name "$name" '[.check_runs[] | select(.name == $name)] | sort_by(.id) | last | .conclusion // "missing"' <<<"$checks")"
+            test "$conclusion" = success
+          done

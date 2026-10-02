@@ -1,0 +1,72 @@
+
+// Package only production classes and resources; normalize text and ordering for repeatable jars.
+tasks.named('processResources', ProcessResources) {
+    filteringCharset = 'UTF-8'
+    def replacements = [
+            version: project.version,
+            mcversion: project.minecraft_version,
+            mod_id: project.mod_id,
+            mod_name: project.mod_name,
+            mod_description: project.mod_description,
+            mod_authors: project.mod_authors,
+            mod_license: project.mod_license,
+            forge_version_range: project.forge_version_range,
+            ironagefurniture_version_range: project.ironagefurniture_version_range,
+            byg_version_range: project.byg_version_range
+    ]
+    inputs.properties replacements
+    filesMatching(['mcmod.info', 'pack.mcmeta']) { expand replacements }
+    filesMatching(archiveTextPatterns, normalizeArchiveLineEndings)
+    from('README.md') { into 'META-INF/iafbygaddon/docs' }
+    from('CHANGELOG.md') { into 'META-INF/iafbygaddon/docs' }
+    from('docs') { include '*.md'; into 'META-INF/iafbygaddon/docs' }
+    from('LICENSE') { into 'META-INF/iafbygaddon' }
+    from('docs/logo.png') {
+        into 'assets/iafbygaddon'
+        rename { 'logo.png' }
+    }
+}
+
+ext.commonManifest = {
+    attributes([
+            'Specification-Title': project.mod_name,
+            'Specification-Vendor': project.mod_authors,
+            'Specification-Version': versionParts[0],
+            'Implementation-Title': base.archivesName.get(),
+            'Implementation-Version': project.version,
+            'Implementation-Vendor': project.mod_authors,
+            'Maven-Artifact': "${project.group}:${base.archivesName.get()}:${project.version}",
+            'Built-On-Java': project.java_version,
+            'Built-On': "${project.minecraft_version}-${project.forge_version}"
+    ])
+}
+tasks.named('jar', Jar) {
+    archiveClassifier = 'deobf'
+    destinationDirectory = layout.buildDirectory.dir('libs-dev')
+    manifest(commonManifest)
+}
+ext.releaseJar = renamer.classes(tasks.named('jar', Jar)) {
+    map.from minecraft.dependency.toSrgFile
+    archiveClassifier = null
+    output = layout.buildDirectory.file("libs/${base.archivesName.get()}-${project.version}.jar")
+}
+tasks.named('sourcesJar', Jar) {
+    archiveClassifier = 'sources'
+    includeEmptyDirs = false
+    filesMatching(archiveTextPatterns, normalizeArchiveLineEndings)
+    manifest { attributes(['Maven-Artifact': "${project.group}:${base.archivesName.get()}:${project.version}:sources"]) }
+}
+tasks.named('javadocJar', Jar) {
+    archiveClassifier = 'javadoc'
+    filesMatching(archiveTextPatterns, normalizeArchiveLineEndings)
+    manifest { attributes(['Maven-Artifact': "${project.group}:${base.archivesName.get()}:${project.version}:javadoc"]) }
+}
+['apiElements', 'runtimeElements'].each { name ->
+    configurations.named(name) { artifacts.clear() }
+    artifacts { add(name, releaseJar) }
+}
+tasks.named('assemble') {
+    dependsOn releaseJar
+    dependsOn tasks.named('sourcesJar')
+    dependsOn tasks.named('javadocJar')
+}

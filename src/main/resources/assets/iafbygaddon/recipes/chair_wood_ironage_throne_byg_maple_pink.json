@@ -1,0 +1,27 @@
+{
+    "type": "forge:ore_shaped",
+    "group": "iafbygaddon:chair_wood_ironage_throne_byg_maple/meta_6",
+    "pattern": [
+        "z",
+        "x",
+        "y"
+    ],
+    "key": {
+        "z": {
+            "item": "minecraft:carpet",
+            "data": 6
+        },
+        "x": {
+            "item": "byg:mapleplanks"
+        },
+        "y": {
+            "item": "iafbygaddon:chair_wood_ironage_wingback_byg_maple",
+            "data": 32767
+        }
+    },
+    "result": {
+        "item": "iafbygaddon:chair_wood_ironage_throne_byg_maple",
+        "data": 6,
+        "nbt": "{Color:\"pink\"}"
+    }
+}

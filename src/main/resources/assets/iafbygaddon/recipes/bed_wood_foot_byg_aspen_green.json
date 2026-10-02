@@ -1,0 +1,18 @@
+{
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:bed",
+            "data": 13
+        },
+        {
+            "item": "byg:aspen_planks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_wood_foot_byg_aspen",
+        "data": 13,
+        "nbt": "{Color:\"green\"}"
+    },
+    "group": "iafbygaddon:bed_wood_foot_byg_aspen/meta_13"
+}

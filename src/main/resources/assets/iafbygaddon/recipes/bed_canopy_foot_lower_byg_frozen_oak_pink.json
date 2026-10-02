@@ -1,0 +1,19 @@
+{
+    "type": "ironagefurniture:canopy_bed_upgrade",
+    "group": "iafbygaddon:bed_canopy_foot_lower_byg_frozen_oak/meta_6",
+    "ingredients": [
+        {
+            "item": "iafbygaddon:bed_wood_foot_byg_frozen_oak",
+            "data": 6,
+            "nbt": "{Color:\"pink\"}"
+        },
+        {
+            "item": "byg:frozenoakplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_canopy_foot_lower_byg_frozen_oak",
+        "data": 6,
+        "nbt": "{Color:\"pink\"}"
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "type": "forge:ore_shaped",
+    "group": "iafbygaddon:chair_wood_ironage_throne_byg_witch_hazel/meta_13",
+    "pattern": [
+        "z",
+        "x",
+        "y"
+    ],
+    "key": {
+        "z": {
+            "item": "minecraft:carpet",
+            "data": 13
+        },
+        "x": {
+            "item": "byg:witchhazelplanks"
+        },
+        "y": {
+            "item": "iafbygaddon:chair_wood_ironage_wingback_byg_witch_hazel",
+            "data": 32767
+        }
+    },
+    "result": {
+        "item": "iafbygaddon:chair_wood_ironage_throne_byg_witch_hazel",
+        "data": 13,
+        "nbt": "{Color:\"green\"}"
+    }
+}

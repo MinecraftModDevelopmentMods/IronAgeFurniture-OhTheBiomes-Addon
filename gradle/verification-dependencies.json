@@ -3,10 +3,10 @@
   "dependencies": [
     {
       "name": "Iron Age Furniture",
-      "version": "0.3.0.112021",
-      "file": "iron-age-furniture-0.3.0.112021.jar",
-      "url": "https://github.com/MinecraftModDevelopmentMods/IronAgeFurniture/releases/download/0.3.0.112021/iron-age-furniture-0.3.0.112021.jar",
-      "sha256": "a2783d56ed2c0f86fccb73972b0216ecdc17c03108ab764fe24bc84a5c2054fd"
+      "version": "0.4.0.112021",
+      "file": "iron-age-furniture-0.4.0.112021.jar",
+      "url": "https://github.com/MinecraftModDevelopmentMods/IronAgeFurniture/releases/download/0.4.0.112021/iron-age-furniture-0.4.0.112021.jar",
+      "sha256": "FBCBBD91F2C9DFAB6701C08577546563AE21AF406DD590AF24807023771FF879"
     },
     {
       "name": "Oh The Biomes You'll Go",

@@ -1,0 +1,19 @@
+{
+    "type": "ironagefurniture:canopy_bed_upgrade",
+    "group": "iafbygaddon:bed_canopy_foot_lower_byg_rowan/meta_5",
+    "ingredients": [
+        {
+            "item": "iafbygaddon:bed_wood_foot_byg_rowan",
+            "data": 5,
+            "nbt": "{Color:\"lime\"}"
+        },
+        {
+            "item": "byg:rowanplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_canopy_foot_lower_byg_rowan",
+        "data": 5,
+        "nbt": "{Color:\"lime\"}"
+    }
+}

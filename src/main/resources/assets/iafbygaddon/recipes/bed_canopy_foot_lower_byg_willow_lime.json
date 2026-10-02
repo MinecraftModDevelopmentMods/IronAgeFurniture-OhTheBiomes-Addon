@@ -1,0 +1,19 @@
+{
+    "type": "ironagefurniture:canopy_bed_upgrade",
+    "group": "iafbygaddon:bed_canopy_foot_lower_byg_willow/meta_5",
+    "ingredients": [
+        {
+            "item": "iafbygaddon:bed_wood_foot_byg_willow",
+            "data": 5,
+            "nbt": "{Color:\"lime\"}"
+        },
+        {
+            "item": "byg:willowplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_canopy_foot_lower_byg_willow",
+        "data": 5,
+        "nbt": "{Color:\"lime\"}"
+    }
+}

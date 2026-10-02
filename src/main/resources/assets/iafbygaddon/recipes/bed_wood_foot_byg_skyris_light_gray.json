@@ -1,0 +1,18 @@
+{
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:bed",
+            "data": 8
+        },
+        {
+            "item": "byg:skyrisplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_wood_foot_byg_skyris",
+        "data": 8,
+        "nbt": "{Color:\"light_gray\"}"
+    },
+    "group": "iafbygaddon:bed_wood_foot_byg_skyris/meta_8"
+}

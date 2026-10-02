@@ -1,0 +1,18 @@
+{
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:bed",
+            "data": 5
+        },
+        {
+            "item": "byg:greatoakplanks"
+        }
+    ],
+    "result": {
+        "item": "iafbygaddon:bed_wood_foot_byg_great_oak",
+        "data": 5,
+        "nbt": "{Color:\"lime\"}"
+    },
+    "group": "iafbygaddon:bed_wood_foot_byg_great_oak/meta_5"
+}

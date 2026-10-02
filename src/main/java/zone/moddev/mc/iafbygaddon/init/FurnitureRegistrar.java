@@ -8,6 +8,11 @@ import zone.moddev.mc.ironagefurniture.api.Blocks.Chair;
 import zone.moddev.mc.ironagefurniture.api.Blocks.PaddedBackBench;
 import zone.moddev.mc.ironagefurniture.api.Blocks.PaddedBench;
 import zone.moddev.mc.ironagefurniture.api.Blocks.Stool;
+import zone.moddev.mc.ironagefurniture.api.Blocks.ShieldChair;
+import zone.moddev.mc.ironagefurniture.api.Blocks.WingbackChair;
+import zone.moddev.mc.ironagefurniture.api.Blocks.ThroneChair;
+import zone.moddev.mc.ironagefurniture.api.Blocks.MultiBlockWoodBed;
+import zone.moddev.mc.ironagefurniture.api.Blocks.MultiBlockBed;
 import zone.moddev.mc.ironagefurniture.api.Items.ItemBlockPaddedBench;
 
 import net.minecraft.block.Block;
@@ -42,7 +47,7 @@ public final class FurnitureRegistrar {
             String paddedBackBench = id("bench_back_padded_single", suffix);
 
             register(new Chair(Material.WOOD, classic, 10.0F, 0.25D, 1.0F), classic, false);
-            register(new Chair(Material.WOOD, shield, 10.0F, 0.25D, 1.0F), shield, false);
+            register(new ShieldChair(Material.WOOD, shield, 10.0F, 1.0F), shield, false);
             register(new Stool(Material.WOOD, shortStool, 10.0F,
                     false, 0.25D, 1.0F), shortStool, false);
             register(new Stool(Material.WOOD, tallStool, 10.0F,
@@ -57,6 +62,29 @@ public final class FurnitureRegistrar {
                     10.0F, false, 0.25D, 1.0F), backBench, false);
             register(new PaddedBackBench(Material.WOOD, paddedBackBench,
                     10.0F, false, 0.25D, 1.0F), paddedBackBench, true);
+
+            String wingback = id("wingback", suffix);
+            String throne = id("throne", suffix);
+            registerUpholstered(new WingbackChair(Material.WOOD, wingback, 10.0F, 1.0F), wingback, true);
+            registerUpholstered(new ThroneChair(Material.WOOD, throne, 10.0F, 1.0F), throne, true);
+
+            String wooden = "bed_wood_foot_" + suffix;
+            String woodenDouble = "bed_wood_foot_left_" + suffix;
+            registerUpholstered(new MultiBlockWoodBed(Material.WOOD, wooden, 10.0F, 3.0F, false), wooden, true);
+            registerUpholstered(new MultiBlockWoodBed(Material.WOOD, woodenDouble, 10.0F, 6.0F, true), woodenDouble, true);
+
+            String canopy = "bed_canopy_foot_lower_" + suffix;
+            String canopyLeft = "bed_canopy_foot_left_lower_" + suffix;
+            String canopyRight = "bed_canopy_foot_right_lower_" + suffix;
+            MultiBlockBed single = new MultiBlockBed(Material.WOOD, canopy, 10.0F, 3.0F, MultiBlockBed.SINGLE_SIDE);
+            MultiBlockBed left = new MultiBlockBed(Material.WOOD, canopyLeft, 10.0F, 6.0F, MultiBlockBed.LEFT_SIDE);
+            MultiBlockBed right = new MultiBlockBed(Material.WOOD, canopyRight, 10.0F, 6.0F, MultiBlockBed.RIGHT_SIDE);
+            registerUpholstered(single, canopy, true);
+            registerUpholstered(left, canopyLeft, true);
+            registerUpholstered(right, canopyRight, false);
+            single.setSingleBlock(single);
+            left.setDoubleBlocks(left, right);
+            right.setDoubleBlocks(left, right);
         }
     }
 
@@ -77,6 +105,23 @@ public final class FurnitureRegistrar {
 
         AddonRegistries.BLOCKS.put(path, block);
         AddonRegistries.ITEMS.put(path, item);
+    }
+
+    private static void registerUpholstered(Block block, String path, boolean visible) {
+        ResourceLocation name = new ResourceLocation(IAFOhTheBiomesAddon.MODID, path);
+        block.setRegistryName(name);
+        block.setTranslationKey(IAFOhTheBiomesAddon.MODID + "." + path);
+        AddonRegistries.BLOCKS.put(path, block);
+        // The right canopy partner is placed by the visible left item, never independently.
+        block.setCreativeTab(null);
+        if (visible) {
+            block.setCreativeTab(Ironagefurniture.ironagefurnitureTab);
+            ItemBlock item = new ItemBlockColouredFurniture(block);
+            item.setRegistryName(name);
+            item.setTranslationKey(IAFOhTheBiomesAddon.MODID + "." + path);
+            item.setMaxStackSize(16);
+            AddonRegistries.ITEMS.put(path, item);
+        }
     }
 
 }
